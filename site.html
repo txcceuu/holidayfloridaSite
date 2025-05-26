@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orlando Family Adventure Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Report Info: Slide 1 (Title) -> Goal: Introduce -> Presentation: Hero section with title, subtitle, and appealing placeholder image. -> Interaction: None -> Justification: Strong, inviting visual start.
+        - Report Info: Slide 2 (Why Orlando) -> Goal: Persuade -> Presentation: Bullet points with Unicode icons (e.g., ✨, ☀️, 👍, 📸) for key benefits. -> Interaction: None -> Justification: Quickly conveys core advantages.
+        - Report Info: Slides 3 & 4 (Theme Parks) -> Goal: Detail Major Parks -> Presentation: Two main sub-sections (Disney & Universal) with cards for each park (Magic Kingdom, Epcot, Universal Studios, etc.). Each card shows key attractions. -> Interaction: Subtle hover effects on cards. -> Justification: Organizes extensive park information clearly.
+        - Report Info: Slide 5 (Water Parks) -> Goal: Showcase Water Fun -> Presentation: Grid of cards for water parks, each with a brief description. -> Interaction: Hover effects. -> Justification: Visually appealing and easy to scan.
+        - Report Info: Slides 6 & 7 (Beyond Parks - Nature & Unique) -> Goal: Show Variety -> Presentation: Combined section with a grid of cards for diverse activities like Gatorland, Kennedy Space Center, ICON Park. -> Interaction: Hover effects. -> Justification: Highlights the breadth of Orlando experiences.
+        - Report Info: Slide 8 (Food) -> Goal: Tempt with Dining -> Presentation: Visually descriptive text sections for character dining, international cuisine, themed restaurants, and iconic snacks. -> Interaction: None. -> Justification: Evokes the culinary experiences.
+        - Report Info: Slide 9 (Accommodation) -> Goal: Inform on Stays -> Presentation: Informational text with Unicode icons (e.g., 🏨, 🏡, 💰) for types of lodging. -> Interaction: None. -> Justification: Provides practical information.
+        - Report Info: Slide 10 & 11 (Persuade/Plan) -> Goal: Call to Action & Engage -> Presentation: Persuasive text followed by an interactive "Family Interest Poll". Activities from the presentation are listed with "vote" buttons. A Chart.js bar chart dynamically displays (mock) vote counts. -> Interaction: Users can click "vote" buttons to increment counts on the chart (client-side mock). -> Justification: Makes the planning process interactive, fun, and visually demonstrates potential family preferences.
+        - Library/Method: Chart.js for the poll. HTML/Tailwind/Vanilla JS for all other elements.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-bg {
+            background-image: url('https://placehold.co/1200x600/FF7043/FFFFFF?text=Orlando+Fun!');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .nav-item {
+            transition: color 0.3s ease;
+        }
+
+            .nav-item:hover {
+                color: #FF7043;
+            }
+        /* Warm Orange for hover */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            }
+
+        .section-title {
+            border-bottom: 3px solid #FF7043;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .vote-button {
+            background-color: #29B6F6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .vote-button:hover {
+                background-color: #039BE5;
+            }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-[#FF7043]">Orlando Adventure</a>
+            <div class="hidden md:flex space-x-4">
+                <a href="#why-orlando" class="nav-item text-gray-700">Why Orlando?</a>
+                <a href="#theme-parks" class="nav-item text-gray-700">Theme Parks</a>
+                <a href="#water-parks" class="nav-item text-gray-700">Water Parks</a>
+                <a href="#beyond-parks" class="nav-item text-gray-700">More Fun</a>
+                <a href="#food-stays" class="nav-item text-gray-700">Food & Stays</a>
+                <a href="#lets-plan" class="nav-item text-gray-700">Let's Plan!</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+            <a href="#why-orlando" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Why Orlando?</a>
+            <a href="#theme-parks" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Theme Parks</a>
+            <a href="#water-parks" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Water Parks</a>
+            <a href="#beyond-parks" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">More Fun</a>
+            <a href="#food-stays" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Food & Stays</a>
+            <a href="#lets-plan" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Let's Plan!</a>
+        </div>
+    </nav>
+
+    <header class="hero-bg h-[60vh] flex items-center justify-center text-white text-center">
+        <div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">Dream Family Holiday: Orlando, Florida!</h1>
+            <p class="text-xl md:text-2xl drop-shadow-md">Sun, Fun, and Unforgettable Memories Await!</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="why-orlando" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-2 section-title">Why Orlando is the PERFECT Family Getaway!</h2>
+            <p class="text-center text-lg text-gray-600 mb-10">Orlando offers an unparalleled mix of excitement, relaxation, and magical moments. It's a destination designed to create joy and lasting memories for every member of the family. Discover why your next great adventure should be here!</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <span class="text-4xl mb-2">✨</span>
+                    <h3 class="text-xl font-semibold mb-2">World-Class Entertainment</h3>
+                    <p class="text-gray-600">Home to the best theme parks on the planet, offering endless fun.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <span class="text-4xl mb-2">☀️</span>
+                    <h3 class="text-xl font-semibold mb-2">Sunshine & Warmth</h3>
+                    <p class="text-gray-600">Escape the everyday with Florida's beautiful, sunny weather.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <span class="text-4xl mb-2">👍</span>
+                    <h3 class="text-xl font-semibold mb-2">Something for Everyone</h3>
+                    <p class="text-gray-600">Thrills, magic, relaxation – activities for all ages and interests.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <span class="text-4xl mb-2">📸</span>
+                    <h3 class="text-xl font-semibold mb-2">Create Lasting Memories</h3>
+                    <p class="text-gray-600">Experiences you'll talk about and cherish for years to come.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="theme-parks" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-2 section-title">Theme Park Magic & Thrills</h2>
+            <p class="text-center text-lg text-gray-600 mb-10">Orlando is the undisputed theme park capital of the world! Whether you're looking for fairytale magic at Walt Disney World or high-octane adventures at Universal Orlando Resort, there's an incredible park experience waiting for you.</p>
+
+            <div class="mb-12">
+                <h3 class="text-3xl font-semibold text-center text-[#FF7043] mb-6">Step Into the Magic: Walt Disney World Resort!</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg card">
+                        <img src="https://placehold.co/400x250/2196F3/FFFFFF?text=Magic+Kingdom" alt="Magic Kingdom" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Magic Kingdom</h4>
+                        <p class="text-gray-600 text-sm">Cinderella's Castle, classic rides, parades, fireworks!</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card">
+                        <img src="https://placehold.co/400x250/4CAF50/FFFFFF?text=Epcot" alt="Epcot" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Epcot</h4>
+                        <p class="text-gray-600 text-sm">Explore cultures, future tech, and amazing festivals.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card">
+                        <img src="https://placehold.co/400x250/FFC107/FFFFFF?text=Hollywood+Studios" alt="Hollywood Studios" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Hollywood Studios</h4>
+                        <p class="text-gray-600 text-sm">Star Wars: Galaxy's Edge, Toy Story Land, thrilling shows.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card">
+                        <img src="https://placehold.co/400x250/795548/FFFFFF?text=Animal+Kingdom" alt="Animal Kingdom" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Animal Kingdom</h4>
+                        <p class="text-gray-600 text-sm">Safari adventures, Pandora – The World of Avatar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-3xl font-semibold text-center text-[#FF7043] mb-6">Unleash the Adventure: Universal Orlando Resort!</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg card">
+                        <img src="https://placehold.co/400x250/00BCD4/FFFFFF?text=Universal+Studios" alt="Universal Studios Florida" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Universal Studios Florida</h4>
+                        <p class="text-gray-600 text-sm">Diagon Alley, Minions, Hollywood Rip Ride Rockit.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card">
+                        <img src="https://placehold.co/400x250/8BC34A/FFFFFF?text=Islands+of+Adventure" alt="Islands of Adventure" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Islands of Adventure</h4>
+                        <p class="text-gray-600 text-sm">Hogsmeade, Jurassic Park, The Incredible Hulk Coaster.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg card md:col-span-2 lg:col-span-1">
+                        <img src="https://placehold.co/400x250/673AB7/FFFFFF?text=Wizarding+World" alt="Wizarding World of Harry Potter" class="rounded-md mb-4 w-full h-48 object-cover">
+                        <h4 class="text-xl font-bold mb-2">Wizarding World of Harry Potter</h4>
+                        <p class="text-gray-600 text-sm">Immerse yourselves in the magic across both parks!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="water-parks" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-2 section-title">Splash & Play: Orlando's Water Parks</h2>
+            <p class="text-center text-lg text-gray-600 mb-10">When the Florida sun shines bright, there's no better way to cool down and have a blast than at one of Orlando's amazing water parks. From thrilling slides to lazy rivers, these aquatic wonderlands offer fun for all ages.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/03A9F4/FFFFFF?text=Typhoon+Lagoon" alt="Typhoon Lagoon" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Typhoon Lagoon (Disney)</h4>
+                    <p class="text-gray-600 text-sm">Tropical paradise with a huge wave pool.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/90CAF9/FFFFFF?text=Blizzard+Beach" alt="Blizzard Beach" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Blizzard Beach (Disney)</h4>
+                    <p class="text-gray-600 text-sm">Ski resort themed water park with thrilling slides.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/FF9800/FFFFFF?text=Volcano+Bay" alt="Volcano Bay" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Volcano Bay (Universal)</h4>
+                    <p class="text-gray-600 text-sm">South Pacific themed park with a massive volcano.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/009688/FFFFFF?text=Aquatica" alt="Aquatica" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Aquatica (SeaWorld)</h4>
+                    <p class="text-gray-600 text-sm">Animal encounters mixed with exciting slides.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="beyond-parks" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-2 section-title">Discover More Fun: Nature & Unique Experiences</h2>
+            <p class="text-center text-lg text-gray-600 mb-10">Orlando's excitement extends far beyond the theme park gates! Explore Florida's natural beauty, encounter unique wildlife, and dive into one-of-a-kind attractions that offer a different kind of thrill and discovery.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/4CAF50/FFFFFF?text=Gatorland" alt="Gatorland" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Gatorland</h4>
+                    <p class="text-gray-600 text-sm">"Alligator Capital of the World" – see thousands of gators, zip-line over them!</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/CDDC39/FFFFFF?text=Airboat+Tour" alt="Everglades Airboat Tour" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Everglades Airboat Tour</h4>
+                    <p class="text-gray-600 text-sm">Experience Florida's unique ecosystem and spot wildlife.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/00BCD4/FFFFFF?text=Natural+Springs" alt="Natural Springs" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Natural Springs</h4>
+                    <p class="text-gray-600 text-sm">Swim in crystal-clear natural springs (e.g., Wekiwa Springs).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/607D8B/FFFFFF?text=Kennedy+Space+Center" alt="Kennedy Space Center" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Kennedy Space Center</h4>
+                    <p class="text-gray-600 text-sm">Walk among rockets, meet an astronaut, shuttle launch simulation!</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/E91E63/FFFFFF?text=ICON+Park" alt="ICON Park" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">ICON Park</h4>
+                    <p class="text-gray-600 text-sm">Ride The Wheel, visit Madame Tussauds, SEA LIFE Aquarium.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg card">
+                    <img src="https://placehold.co/400x250/9C27B0/FFFFFF?text=Dinner+Shows" alt="Dinner Shows" class="rounded-md mb-4 w-full h-48 object-cover">
+                    <h4 class="text-xl font-bold mb-2">Dinner Shows</h4>
+                    <p class="text-gray-600 text-sm">Medieval Times, Pirate's Dinner Adventure – interactive fun!</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="food-stays" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-2 section-title">Delicious Eats & Comfortable Stays</h2>
+            <p class="text-center text-lg text-gray-600 mb-10">A great holiday needs fantastic food and a comfortable place to rest. Orlando delivers on both fronts, with an incredible variety of dining options to tantalize your taste buds and a wide range of accommodations to suit every family's needs and budget.</p>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-2xl font-semibold text-[#FF7043] mb-4">A Culinary Journey for Every Palate!</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li><span class="font-semibold">😋 Character Dining:</span> Meet your favorite characters while you eat! An unforgettable experience for kids (and adults!).</li>
+                        <li><span class="font-semibold">🌍 International Cuisine:</span> From casual to fine dining, explore flavors from around the globe.</li>
+                        <li><span class="font-semibold">🎭 Themed Restaurants:</span> Dine in immersive environments like Rainforest Cafe or Toothsome Chocolate Emporium.</li>
+                        <li><span class="font-semibold">🍦 Snacks & Treats:</span> Don't miss iconic holiday treats like Dole Whip, Butterbeer, and giant turkey legs!</li>
+                    </ul>
+                    <img src="https://placehold.co/600x300/FFEE58/424242?text=Delicious+Orlando+Food" alt="Orlando Food Collage" class="rounded-lg shadow-md mt-6 w-full h-64 object-cover">
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-[#FF7043] mb-4">Your Home Away From Home!</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li><span class="font-semibold">🏨 Resorts with Perks:</span> Stay on-site for benefits like early park access and free transportation.</li>
+                        <li><span class="font-semibold">🏡 Spacious Villas:</span> Ideal for families, often with kitchens, multiple rooms, and private pools.</li>
+                        <li><span class="font-semibold">💰 Hotels for Every Budget:</span> A wide array of options from budget-friendly to luxury.</li>
+                        <li><span class="font-semibold">😌 Comfort & Convenience:</span> Ensuring a relaxing and hassle-free stay after exciting days.</li>
+                    </ul>
+                    <img src="https://placehold.co/600x300/29B6F6/FFFFFF?text=Comfortable+Orlando+Stays" alt="Orlando Accommodation Collage" class="rounded-lg shadow-md mt-6 w-full h-64 object-cover">
+                </div>
+            </div>
+        </section>
+
+        <section id="lets-plan" class="mb-16 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-center mb-2 section-title">Let's Make This Dream a Reality!</h2>
+            <p class="text-center text-lg text-gray-600 mb-6">Now is the perfect time to plan an unforgettable family adventure! This isn't just a holiday; it's an opportunity to create lifelong memories, bond as a family, and experience pure joy together. Let's start discussing what excites you most!</p>
+
+            <div class="bg-white p-8 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-semibold text-center text-[#FF7043] mb-6">Family Interest Poll!</h3>
+                <p class="text-center text-gray-600 mb-6">What are you most excited about? Click "Vote" for your top picks (this is just for fun to see what everyone likes!).</p>
+                <div class="space-y-4 mb-8" id="poll-options">
+                </div>
+                <div class="chart-container bg-gray-50 p-4 rounded-lg">
+                    <canvas id="interestPollChart"></canvas>
+                </div>
+                <div class="text-center mt-8">
+                    <h3 class="text-2xl font-semibold mb-3">What Do You Say? Let's Plan Our Orlando Adventure!</h3>
+                    <p class="text-gray-700 mb-2">What are your favorite ideas from everything you've seen?</p>
+                    <p class="text-gray-700 mb-2">Let's pick some dates and start looking at the exciting options!</p>
+                    <p class="text-gray-700 font-semibold">Your input matters – we'll plan this amazing trip together!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-8">
+        <p>&copy; <span id="currentYear"></span> Orlando Family Adventure Planner. Let's make some memories!</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                // Close mobile menu after clicking a link
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Family Interest Poll Data and Chart
+        const pollActivities = [
+            { id: 'magicKingdom', name: 'Magic Kingdom Fun', votes: 5 },
+            { id: 'universalStudios', name: 'Universal Studios Thrills', votes: 4 },
+            { id: 'waterParkSplash', name: 'Water Park Splash', votes: 3 },
+            { id: 'kennedySpace', name: 'Kennedy Space Center', votes: 2 },
+            { id: 'gatorlandAdventure', name: 'Gatorland Adventure', votes: 1 }
+        ];
+
+        const pollOptionsContainer = document.getElementById('poll-options');
+        pollActivities.forEach(activity => {
+            const div = document.createElement('div');
+            div.className = 'flex justify-between items-center bg-gray-100 p-3 rounded-lg';
+            div.innerHTML = `
+                <span class="text-gray-700">${activity.name}</span>
+                <button class="vote-button" data-id="${activity.id}">Vote (<span id="votes-${activity.id}">${activity.votes}</span>)</button>
+            `;
+            pollOptionsContainer.appendChild(div);
+        });
+
+        const ctx = document.getElementById('interestPollChart').getContext('2d');
+        let interestPollChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: pollActivities.map(a => a.name),
+                datasets: [{
+                    label: 'Family Votes',
+                    data: pollActivities.map(a => a.votes),
+                    backgroundColor: [
+                        'rgba(255, 112, 67, 0.7)', // Warm Orange
+                        'rgba(41, 182, 246, 0.7)', // Bright Blue
+                        'rgba(255, 238, 88, 0.7)', // Sunny Yellow
+                        'rgba(126, 87, 194, 0.7)', // Purple
+                        'rgba(76, 175, 80, 0.7)'   // Green
+                    ],
+                    borderColor: [
+                        'rgba(255, 112, 67, 1)',
+                        'rgba(41, 182, 246, 1)',
+                        'rgba(255, 238, 88, 1)',
+                        'rgba(126, 87, 194, 1)',
+                        'rgba(76, 175, 80, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    x: {
+                        ticks: {
+                             callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                if (label.length > 15) {
+                                    return label.substring(0, 15) + '...';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Votes: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Handle voting
+        document.querySelectorAll('.vote-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const activityId = this.dataset.id;
+                const activity = pollActivities.find(a => a.id === activityId);
+                if (activity) {
+                    activity.votes++;
+                    document.getElementById(`votes-${activityId}`).textContent = activity.votes;
+                    interestPollChart.data.datasets[0].data = pollActivities.map(a => a.votes);
+                    interestPollChart.update();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
