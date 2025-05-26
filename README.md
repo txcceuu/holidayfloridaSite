@@ -29,7 +29,8 @@ Not sure just have to work with it, some work some dont
 
 - Fix links
 - Fix desktop sites images not loading correctly
-- Add Everglades
+- Add Everglades, Chilli's, Longhorns, Floridays, Sonesta, Westgates lakes, Carlos Bakery Cakes, Canyon zip line and adventure park, Coco Beach, Clearwater, Shopping (Premium Outlets, ect), Shooting, Quad Biking
+- Remove Disney (Except animal kingdom), Sea world, 
 
 
 ## Authors
