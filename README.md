@@ -24,6 +24,14 @@ Press the names of places and right click/hold the link until it says copy link 
 
 Not sure just have to work with it, some work some dont
 
+
+## To Do
+
+- Fix links
+- Fix desktop sites images not loading correctly
+- Add Everglades
+
+
 ## Authors
 
 - [@txcceuu](https://www.github.com/txcceuu)
