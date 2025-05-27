@@ -18,19 +18,11 @@ Download the file then go to your downloads and open using the browser of your c
 
 #### How to get more infomation/open links
 
-Press the names of places and right click/hold the link until it says copy link or open in a new tab
+Press the names of places and right click/hold the link until it says copy link or open in a new tab.
 
 #### Why are pictures pixalted/low quality
 
-Not sure just have to work with it, some work some dont
-
-
-## To Do
-
-- Fix links
-- Fix desktop sites images not loading correctly
-- Add Everglades, Chilli's, Longhorns, Floridays, Sonesta, Westgates lakes, Carlos Bakery Cakes, Canyon zip line and adventure park, Coco Beach, Clearwater, Shopping (Premium Outlets, ect), Shooting, Quad Biking
-- Remove Disney (Except animal kingdom), Sea world, 
+Not sure just have to work with it, some work some dont. Only appears on desktop browsers
 
 
 ## Authors
