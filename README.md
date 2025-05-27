@@ -16,10 +16,6 @@ Download the file then go to your downloads and open using the browser of your c
 
 ## FAQ
 
-#### How to get more infomation/open links
-
-Press the names of places and right click/hold the link until it says copy link or open in a new tab.
-
 #### Why are pictures pixalted/low quality
 
 Not sure just have to work with it, some work some dont. Only appears on desktop browsers
