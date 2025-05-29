@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orlando Family Adventure Planner</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Orlando Family Adventure Planner</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
         body {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
@@ -141,148 +142,188 @@
     </style>
 </head>
 <body class="bg-white text-gray-800">
-
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-[#FF7043]">Orlando Adventure</a>
-            <div class="hidden md:flex space-x-4">
-                <a href="#why-orlando" class="nav-item text-gray-700">Why Orlando?</a>
-                <a href="#universal-parks" class="nav-item text-gray-700">Universal Parks</a>
-                <a href="#other-theme-parks" class="nav-item text-gray-700">Other Theme Parks & Wildlife</a>
-                <a href="#nature-beaches" class="nav-item text-gray-700">Nature & Beaches</a>
-                <a href="#entertainment-attractions" class="nav-item text-gray-700">Entertainment & Attractions</a>
-                <a href="#food-stays" class="nav-item text-gray-700">Food & Stays</a>
-                <a href="#shopping" class="nav-item text-gray-700">Shopping</a>
-                <a href="#leisure-activities" class="nav-item text-gray-700">Leisure</a>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
-            <a href="#why-orlando" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Why Orlando?</a>
-            <a href="#universal-parks" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Universal Parks</a>
-            <a href="#other-theme-parks" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Other Theme Parks & Wildlife</a>
-            <a href="#nature-beaches" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Nature & Beaches</a>
-            <a href="#entertainment-attractions" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Entertainment & Attractions</a>
-            <a href="#food-stays" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Food & Stays</a>
-            <a href="#shopping" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Shopping</a>
-            <a href="#leisure-activities" class="block px-6 py-3 text-gray-700 hover:bg-gray-100">Leisure</a>
-        </div>
-    </nav>
-
-    <header class="hero-bg h-[60vh] flex items-center justify-center text-white text-center">
-        <div class="hero-overlay">
-            <div>
-                <h1 class="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">Our next Holiday</h1>
-                <p class="text-xl md:text-2xl drop-shadow-md">To Orlando, Florida!</p>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-6 py-12 relative z-10 bg-white rounded-lg shadow-xl -mt-16">
-
-        <section id="why-orlando" class="mb-16 scroll-mt-20 pt-16">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Why we should go to Orlando!</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Orlando offers an unparalleled mix of excitement, relaxation, and magical moments. It's a destination designed to create joy and lasting memories for every member of the family. Discover why your next great adventure should be here!</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                <div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
-                    <span class="text-4xl mb-2">🎢</span>
-                    <h3 class="text-xl font-semibold mb-2">World-Class Thrills</h3>
-                    <p class="text-gray-600">Home to incredible theme parks with exhilarating rides and immersive experiences.</p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
-                    <span class="text-4xl mb-2">☀️</span>
-                    <h3 class="text-xl font-semibold mb-2">Sunshine & Warmth</h3>
-                    <p class="text-gray-600">Escape the everyday with Florida's beautiful, sunny weather year-round.</p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
-                    <span class="text-4xl mb-2">👨‍👩‍👧‍👦</span>
-                    <h3 class="text-xl font-semibold mb-2">Something for Everyone</h3>
-                    <p class="text-gray-600">From adventurous rides to relaxing shows, there's fun for all ages and interests.</p>
-                </div>
-                <div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
-                    <span class="text-4xl mb-2">📸</span>
-                    <h3 class="text-xl font-semibold mb-2">Create Lasting Memories</h3>
-                    <p class="text-gray-600">Experiences you'll talk about and cherish for years to come as a family.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="universal-parks" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Unleash the Adventure: Universal Orlando Resort!</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Dive into the epic worlds of Universal Orlando Resort! Experience the magic of Harry Potter, brave the dinosaurs of Jurassic Park, and become part of your favorite movies. Universal offers thrilling rides, immersive environments, and unforgettable entertainment for the whole family.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-
-        <section id="other-theme-parks" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Other Theme Parks & Wildlife Encounters</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Explore more thrilling theme parks and get up close with incredible wildlife beyond Universal!</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-
-        <section id="nature-beaches" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Nature & Beaches: Florida's Natural Beauty</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Discover the serene natural landscapes and beautiful coastlines that Florida has to offer, perfect for relaxation and outdoor exploration.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-
-        <section id="entertainment-attractions" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Unique Entertainment & Attractions</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Beyond the major parks, Orlando offers a variety of unique attractions and entertainment venues for all interests.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-
-        <section id="food-stays" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Savor & Stay: Dining and Accommodation</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Orlando caters to every palate and preference when it comes to dining and accommodation. From casual bites to fine dining, and cozy resorts to luxurious hotels, you'll find the perfect spot to refuel and relax after a day of adventure.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-
-        <section id="shopping" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Shop 'til You Drop: Retail Therapy in Orlando</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Orlando is a shopper's paradise, offering everything from high-end boutiques to incredible outlet deals. Get ready to explore vast malls and charming specialty shops!</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-
-        <section id="leisure-activities" class="mb-16 scroll-mt-20">
-            <h2 class="text-4xl font-bold text-center mb-2 section-title">Leisure & Fun: Beyond the Big Parks</h2>
-            <p class="text-center text-lg text-gray-600 mb-10">Discover a range of exciting leisure activities in Orlando, from mini-golf adventures to high-speed go-kart racing, offering fun for all ages!</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-800 text-white text-center py-8">
-        <p class="mt-2"><a href="https://github.com/txcceuu/holidayfloridaSite" target="_blank" class="text-blue-400 hover:underline">GitHub Repository</a></p>
-    </footer>
-
-    <div id="activityDetailModal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="closeModal">×</button>
-            <h3 id="modalTitle" class="text-3xl font-bold text-[#FF7043] mb-4"></h3>
-            <img id="modalImage" src="" alt="" class="rounded-lg mb-4 w-full h-64 object-cover">
-            <p id="modalDescription" class="text-gray-700 mb-4"></p>
-
-            <div class="flex flex-wrap gap-4 mt-4">
-                <a id="modalWebsiteLink" href="#" target="_blank" class="inline-block bg-[#FF7043] text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition duration-300">Visit Website</a>
-                <a id="modalGoogleMapsLink" href="#" target="_blank" class="inline-block bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition duration-300">View on Google Maps</a>
-            </div>
-
-        </div>
-    </div>
-
-    <script>
+<nav class="bg-white shadow-md sticky top-0 z-50">
+<div class="container mx-auto px-6 py-3 flex justify-between items-center">
+<a class="text-2xl font-bold text-[#FF7043]" href="#">Orlando Adventure</a>
+<div class="hidden md:flex space-x-4">
+<a class="nav-item text-gray-700" href="#why-orlando">Why Orlando?</a>
+<a class="nav-item text-gray-700" href="#universal-parks">Universal Parks</a>
+<a class="nav-item text-gray-700" href="#other-theme-parks">Other Theme Parks &amp; Wildlife</a>
+<a class="nav-item text-gray-700" href="#nature-beaches">Nature &amp; Beaches</a>
+<a class="nav-item text-gray-700" href="#entertainment-attractions">Entertainment &amp; Attractions</a>
+<a class="nav-item text-gray-700" href="#food-stays">Food &amp; Stays</a>
+<a class="nav-item text-gray-700" href="#shopping">Shopping</a>
+<a class="nav-item text-gray-700" href="#leisure-activities">Leisure</a>
+</div>
+<div class="md:hidden">
+<button class="text-gray-700 focus:outline-none" id="mobile-menu-button">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<div class="md:hidden hidden bg-white shadow-lg" id="mobile-menu">
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#why-orlando">Why Orlando?</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#universal-parks">Universal Parks</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#other-theme-parks">Other Theme Parks &amp; Wildlife</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#nature-beaches">Nature &amp; Beaches</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#entertainment-attractions">Entertainment &amp; Attractions</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#food-stays">Food &amp; Stays</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#shopping">Shopping</a>
+<a class="block px-6 py-3 text-gray-700 hover:bg-gray-100" href="#leisure-activities">Leisure</a>
+</div>
+</nav>
+<header class="hero-bg h-[60vh] flex items-center justify-center text-white text-center">
+<div class="hero-overlay">
+<div>
+<h1 class="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">Our next Holiday</h1>
+<p class="text-xl md:text-2xl drop-shadow-md">To Orlando, Florida!</p>
+</div>
+</div>
+</header>
+<main class="container mx-auto px-6 py-12 relative z-10 bg-white rounded-lg shadow-xl -mt-16">
+<section class="mb-16 scroll-mt-20 pt-16" id="why-orlando">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Why we should go to Orlando!</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Orlando offers an unparalleled mix of excitement, relaxation, and magical moments. It's a destination designed to create joy and lasting memories for every member of the family. Discover why your next great adventure should be here!</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+<div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
+<span class="text-4xl mb-2">🎢</span>
+<h3 class="text-xl font-semibold mb-2">World-Class Thrills</h3>
+<p class="text-gray-600">Home to incredible theme parks with exhilarating rides and immersive experiences.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
+<span class="text-4xl mb-2">☀️</span>
+<h3 class="text-xl font-semibold mb-2">Sunshine &amp; Warmth</h3>
+<p class="text-gray-600">Escape the everyday with Florida's beautiful, sunny weather year-round.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
+<span class="text-4xl mb-2">👨‍👩‍👧‍👦</span>
+<h3 class="text-xl font-semibold mb-2">Something for Everyone</h3>
+<p class="text-gray-600">From adventurous rides to relaxing shows, there's fun for all ages and interests.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg shadow-lg card">
+<span class="text-4xl mb-2">📸</span>
+<h3 class="text-xl font-semibold mb-2">Create Lasting Memories</h3>
+<p class="text-gray-600">Experiences you'll talk about and cherish for years to come as a family.</p>
+</div>
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="universal-parks">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Unleash the Adventure: Universal Orlando Resort!</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Dive into the epic worlds of Universal Orlando Resort! Experience the magic of Harry Potter, brave the dinosaurs of Jurassic Park, and become part of your favorite movies. Universal offers thrilling rides, immersive environments, and unforgettable entertainment for the whole family.</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="other-theme-parks">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Other Theme Parks &amp; Wildlife Encounters</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Explore more thrilling theme parks and get up close with incredible wildlife beyond Universal!</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="nature-beaches">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Nature &amp; Beaches: Florida's Natural Beauty</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Discover the serene natural landscapes and beautiful coastlines that Florida has to offer, perfect for relaxation and outdoor exploration.</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="entertainment-attractions">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Unique Entertainment &amp; Attractions</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Beyond the major parks, Orlando offers a variety of unique attractions and entertainment venues for all interests.</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="food-stays">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Savor &amp; Stay: Dining and Accommodation</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Orlando caters to every palate and preference when it comes to dining and accommodation. From casual bites to fine dining, and cozy resorts to luxurious hotels, you'll find the perfect spot to refuel and relax after a day of adventure.</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="shopping">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Shop 'til You Drop: Retail Therapy in Orlando</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Orlando is a shopper's paradise, offering everything from high-end boutiques to incredible outlet deals. Get ready to explore vast malls and charming specialty shops!</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+<section class="mb-16 scroll-mt-20" id="leisure-activities">
+<h2 class="text-4xl font-bold text-center mb-2 section-title">Leisure &amp; Fun: Beyond the Big Parks</h2>
+<p class="text-center text-lg text-gray-600 mb-10">Discover a range of exciting leisure activities in Orlando, from mini-golf adventures to high-speed go-kart racing, offering fun for all ages!</p>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+</div>
+</section>
+</main>
+<footer class="bg-gray-800 text-white text-center py-8">
+<p class="mt-2"><a class="text-blue-400 hover:underline" href="https://github.com/txcceuu/holidayfloridaSite" target="_blank">GitHub Repository</a></p>
+</footer>
+<div class="modal-overlay" id="activityDetailModal">
+<div class="modal-content">
+<button class="modal-close-button" id="closeModal">×</button>
+<h3 class="text-3xl font-bold text-[#FF7043] mb-4" id="modalTitle"></h3>
+<img alt="" class="rounded-lg mb-4 w-full h-64 object-cover" id="modalImage" src=""/>
+<p class="text-gray-700 mb-4" id="modalDescription"></p>
+<div class="flex flex-wrap gap-4 mt-4">
+<a class="inline-block bg-[#FF7043] text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition duration-300" href="#" id="modalWebsiteLink" target="_blank">Visit Website</a>
+<a class="inline-block bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition duration-300" href="#" id="modalGoogleMapsLink" target="_blank">View on Google Maps</a>
+</div>
+</div>
+</div>
+<script>
         // Data for all activities, hotels, and restaurants (for modal)
         const allActivitiesData = [
+
+{
+    id: 'leu-gardens',
+    name: 'Harry P. Leu Gardens',
+    category: 'nature_beaches',
+    description: '50-acre botanical oasis minutes from downtown, offering scenic walks, seasonal flowers, and historic charm.',
+    imageUrl: 'https://www.magicalvacationhomes.com/wp-content/uploads/2020/04/Harry_P_Leu_Gardens_3-1.jpg',
+    websiteUrl: 'https://www.leugardens.org',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Harry+P.+Leu+Gardens+Orlando'
+},
+{
+    id: 'bok-tower',
+    name: 'Bok Tower Gardens',
+    category: 'nature_beaches',
+    description: 'Peaceful garden and bird sanctuary with one of the finest carillons in the world. Ideal for a tranquil day trip.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Bok_Tower_at_Work.jpg',
+    websiteUrl: 'https://boktowergardens.org',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Bok+Tower+Gardens+Florida'
+},
+{
+    id: 'icon-park',
+    name: 'ICON Park & The Wheel',
+    category: 'entertainment_attractions',
+    description: 'ICON Park features The Wheel, a 400-foot tall observation wheel with stunning city views. Great dining and nightlife too.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/00/ICON_Park_green_overview.jpg',
+    websiteUrl: 'https://iconparkorlando.com',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=ICON+Park+Orlando'
+},
+{
+    id: 'orlando-museum-art',
+    name: 'Orlando Museum of Art',
+    category: 'entertainment_attractions',
+    description: 'Explore rotating exhibits, contemporary collections, and engaging events at this cultural hub in Orlando.',
+    imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/crm/visitflorida/54695_uhmdkn72x58pw6sariech1jdmswa99lv_93a5e430-5056-a36a-0b7d257fc07373d1.jpg',
+    websiteUrl: 'https://omart.org',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Orlando+Museum+of+Art'
+},
+{
+    id: 'winter-park-boat',
+    name: 'Winter Park Scenic Boat Tour',
+    category: 'leisure',
+    description: 'Relaxing one-hour boat tour through beautiful lakes and canals lined with mansions and lush landscapes.',
+    imageUrl: 'https://www.orlandoattractions.com/2019/wp-content/uploads/2018/04/winter-park-006.jpg',
+    websiteUrl: 'https://scenicboattours.com',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Winter+Park+Scenic+Boat+Tour'
+},
+{
+    id: 'disney-springs',
+    name: 'Disney Springs',
+    category: 'shopping',
+    description: 'Lively waterfront district with dining, shopping, and live entertainment — no park ticket needed.',
+    imageUrl: 'https://images.squarespace-cdn.com/content/v1/54493bfee4b078c86b426a79/1469285147835-IZA866EAOR557K46U91S/DIsney_Springs_Night',
+    websiteUrl: 'https://www.disneysprings.com',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Disney+Springs+Orlando'
+}
+,
             {
                 id: 'universal-studios', name: 'Universal Studios Florida', category: 'universal_parks',
                 description: 'Step directly into the movies at Universal Studios Florida! This park offers thrilling rides based on blockbuster films and immersive lands where you can explore cinematic worlds. Highlights include The Wizarding World of Harry Potter - Diagon Alley, thrilling coasters like Hollywood Rip Ride Rockit, and family favorites such as Despicable Me Minion Mayhem. Experience cutting-edge attractions and spectacular live shows, truly bringing your favorite stories to life.',
