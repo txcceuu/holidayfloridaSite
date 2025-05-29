@@ -1,29 +1,32 @@
 
-## Online Usage
+## 🌐 Online Usage
 
-[Site](https://txcceuu.github.io/holidayfloridaSite)
+You can view the site directly by clicking the link below:
 
+🔗 [Live Site](https://txcceuu.github.io/holidayfloridaSite)
 
-## Offline Usage
+---
 
-[Download](https://github.com/txcceuu/holidayfloridaSite/blob/master/index.html)
+## 💻 Offline Usage
 
-```
-Go to the blue text above
-Download the file then go to your downloads and open using the browser of your choice
-```
+Prefer to view it offline? No problem.
 
+1. [Download `index.html`](https://github.com/txcceuu/holidayfloridaSite/blob/master/index.html)
+2. Open it using **any browser** (Chrome, Edge, Firefox, etc.)
+3. No setup needed — just click and view!
 
-## FAQ
+---
 
-#### Why are pictures pixalted/low quality
+## ❓ FAQ
 
-Not sure just have to work with it, some work some dont. Only appears on desktop browsers
+**Q: Why are some pictures pixelated or low quality?**  
+A: Some image sources aren't perfect. It tends to happen more on desktop browsers than mobile.
 
+---
 
-## Authors
+## 👨‍💻 Author
 
-- [@txcceuu](https://www.github.com/txcceuu)
-- [Gemini 2.5 Pro](https://gemini.google.com/app)
+- [@txcceuu](https://www.github.com/txcceuu)  
 
+---
 
