@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orlando Itinerary Creator</title>
+    <title>Orlando Itinerary Creator - Multi-Day</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -78,19 +78,38 @@
                 background-color: #c82333;
             }
 
-        .input-field {
+        .input-field, .select-field {
             border: 1px solid #ced4da;
             padding: 0.5rem 0.75rem;
             border-radius: 0.375rem;
             width: 100%;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            background-color: white; /* Ensure select has a background */
         }
 
-            .input-field:focus {
+            .input-field:focus, .select-field:focus {
                 border-color: #FF7043;
                 outline: 0;
                 box-shadow: 0 0 0 0.2rem rgba(255, 112, 67, 0.25);
             }
+
+        .day-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed #ddd;
+        }
+
+            .day-section:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+        .day-title {
+            color: #FF7043;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
@@ -152,19 +171,23 @@
     <main class="container mx-auto px-4 py-8">
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-[#FF7043]">Create Your Orlando Itinerary</h1>
-            <p class="text-lg text-gray-600 mt-2">Plan your perfect trip, step by step!</p>
+            <p class="text-lg text-gray-600 mt-2">Plan your perfect multi-day trip, step by step!</p>
         </header>
 
         <section class="mb-10 p-6 bg-white rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Itinerary Details</h2>
-            <div class="grid md:grid-cols-3 gap-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div>
                     <label for="itineraryName" class="block text-sm font-medium text-gray-700 mb-1">Itinerary Name</label>
                     <input type="text" id="itineraryName" class="input-field" placeholder="e.g., Family Fun Trip 2025">
                 </div>
                 <div>
-                    <label for="itineraryDate" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                    <input type="date" id="itineraryDate" class="input-field">
+                    <label for="itineraryStartDate" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input type="date" id="itineraryStartDate" class="input-field">
+                </div>
+                <div>
+                    <label for="itineraryNumberOfDays" class="block text-sm font-medium text-gray-700 mb-1">Number of Days</label>
+                    <input type="number" id="itineraryNumberOfDays" class="input-field" value="1" min="1" max="30">
                 </div>
                 <div>
                     <label for="itineraryBudget" class="block text-sm font-medium text-gray-700 mb-1">Overall Budget ($)</label>
@@ -178,8 +201,12 @@
                 <section class="p-6 bg-white rounded-lg shadow-lg">
                     <h2 class="text-2xl font-semibold mb-1 text-gray-700">2. Add Predefined Activities</h2>
                     <p class="text-sm text-gray-500 mb-4">Choose from popular Orlando attractions.</p>
+                    <div>
+                        <label for="selectDayForPredefined" class="block text-sm font-medium text-gray-700 mb-1">Add to Day:</label>
+                        <select id="selectDayForPredefined" class="select-field mb-4"></select>
+                    </div>
                     <input type="text" id="searchPlannerActivities" class="input-field mb-4" placeholder="Search activities...">
-                    <div id="plannerActivitiesList" class="max-h-96 overflow-y-auto space-y-3 pr-2">
+                    <div id="plannerActivitiesList" class="max-h-80 overflow-y-auto space-y-3 pr-2">
                     </div>
                 </section>
 
@@ -187,6 +214,10 @@
                     <h2 class="text-2xl font-semibold mb-1 text-gray-700">3. Add Custom Item</h2>
                     <p class="text-sm text-gray-500 mb-4">Add your own places or notes.</p>
                     <form id="customActivityForm" class="space-y-4">
+                        <div>
+                            <label for="selectDayForCustom" class="block text-sm font-medium text-gray-700">Add to Day:</label>
+                            <select id="selectDayForCustom" class="select-field mt-1 mb-3"></select>
+                        </div>
                         <div>
                             <label for="customName" class="block text-sm font-medium text-gray-700">Activity Name</label>
                             <input type="text" id="customName" class="input-field mt-1" required placeholder="e.g., Dinner at Resort">
@@ -217,8 +248,8 @@
                             <button id="clearItineraryBtn" class="button-danger text-sm px-3 py-2">🗑️ Clear All</button>
                         </div>
                     </div>
-                    <div id="itineraryItemsContainer" class="space-y-4">
-                        <p class="text-gray-500 italic">Your itinerary is currently empty. Add some activities!</p>
+                    <div id="itineraryDaysContainer" class="space-y-6">
+                        <p class="text-gray-500 italic default-empty-text">Your itinerary is currently empty. Add some activities and set the number of days!</p>
                     </div>
                 </section>
 
@@ -230,7 +261,7 @@
                             <span id="summaryBudget" class="font-semibold text-gray-800">$0.00</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Estimated Cost:</span>
+                            <span class="text-gray-600">Estimated Cost (All Days):</span>
                             <span id="summaryCost" class="font-semibold text-gray-800">$0.00</span>
                         </div>
                         <hr class="my-2">
@@ -277,82 +308,75 @@
 
 
     <script>
-        // --- DATA (From index.html) ---
+        // --- DATA (From index.html, ensure this is kept up-to-date with index.html) ---
         const allActivitiesData = [
-            { id: 'leu-gardens', name: 'Harry P. Leu Gardens', category: 'nature_beaches', description: '50-acre botanical oasis minutes from downtown, offering scenic walks, seasonal flowers, and historic charm.', imageUrl: 'https://www.magicalvacationhomes.com/wp-content/uploads/2020/04/Harry_P_Leu_Gardens_3-1.jpg', websiteUrl: 'https://www.leugardens.org', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Harry+P.+Leu+Gardens' },
-            { id: 'bok-tower', name: 'Bok Tower Gardens', category: 'nature_beaches', description: 'Peaceful garden and bird sanctuary with one of the finest carillons in the world. Ideal for a tranquil day trip.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Bok_Tower_at_Work.jpg', websiteUrl: 'https://boktowergardens.org', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Bok+Tower+Gardens' },
-            { id: 'icon-park', name: 'ICON Park & The Wheel', category: 'entertainment_attractions', description: 'ICON Park features The Wheel, a 400-foot tall observation wheel with stunning city views. Great dining and nightlife too.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/00/ICON_Park_green_overview.jpg', websiteUrl: 'https://iconparkorlando.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=ICON+Park+Orlando' },
-            { id: 'orlando-museum-art', name: 'Orlando Museum of Art', category: 'entertainment_attractions', description: 'Explore rotating exhibits, contemporary collections, and engaging events at this cultural hub in Orlando.', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/crm/visitflorida/54695_uhmdkn72x58pw6sariech1jdmswa99lv_93a5e430-5056-a36a-0b7d257fc07373d1.jpg', websiteUrl: 'https://omart.org', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Orlando+Museum+of+Art' },
-            { id: 'winter-park-boat', name: 'Winter Park Scenic Boat Tour', category: 'leisure', description: 'Relaxing one-hour boat tour through beautiful lakes and canals lined with mansions and lush landscapes.', imageUrl: 'https://www.orlandoattractions.com/2019/wp-content/uploads/2018/04/winter-park-006.jpg', websiteUrl: 'https://scenicboattours.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Winter+Park+Scenic+Boat+Tour' },
-            { id: 'disney-springs', name: 'Disney Springs', category: 'shopping', description: 'Lively waterfront district with dining, shopping, and live entertainment — no park ticket needed.', imageUrl: 'https://images.squarespace-cdn.com/content/v1/54493bfee4b078c86b426a79/1469285147835-IZA866EAOR557K46U91S/DIsney_Springs_Night', websiteUrl: 'https://www.disneysprings.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Disney+Springs' },
-            { id: 'universal-studios', name: 'Universal Studios Florida', category: 'universal_parks', description: 'Step directly into the movies at Universal Studios Florida! This park offers thrilling rides based on blockbuster films and immersive lands where you can explore cinematic worlds. Highlights include The Wizarding World of Harry Potter - Diagon Alley, thrilling coasters like Hollywood Rip Ride Rockit, and family favorites such as Despicable Me Minion Mayhem. Experience cutting-edge attractions and spectacular live shows, truly bringing your favorite stories to life.', imageUrl: 'https://www.themeparkinsider.com/art/reviews/universal-studios-florida.jpg', websiteUrl: 'https://www.universalorlando.com/web/en/us/theme-parks/universal-studios-florida', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Universal+Studios+Florida' },
-            { id: 'islands-of-adventure', name: 'Universal Islands of Adventure', category: 'universal_parks', description: 'Unleash your inner adventurer at Universal Islands of Adventure! This park is home to incredible themed islands, including The Wizarding World of Harry Potter - Hogsmeade, Jurassic Park, and Marvel Super Hero Island. Experience breathtaking rides like Hagrid\'s Magical Creatures Motorbike Adventure, The Incredible Hulk Coaster, and Jurassic Park River Adventure. It\'s a land of myths, legends, and unforgettable thrills around every corner.', imageUrl: 'https://www.themeparkinsider.com/art/reviews/islands-of-adventure.jpg', websiteUrl: 'https://www.universalorlando.com/web/en/us/theme-parks/islands-of-adventure', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Universal+Islands+of+Adventure' },
-            { id: 'volcano-bay', name: 'Universal Volcano Bay', category: 'universal_parks', description: 'Escape to a South Pacific paradise at Universal\'s Volcano Bay, a revolutionary water theme park dominated by the towering Krakatau volcano. This park blends thrilling water slides with serene sandy beaches and relaxing pools. With the TapuTapu wearable, you can virtually queue for rides, allowing more time to relax and explore. It\'s an an oasis of tropical fun and adventure for the whole family.', imageUrl: 'https://www.orlandomagazine.com/content/uploads/2025/02/z/q/universal-volcano-bay-nights-tickets-are-on-sale-now.jpg', websiteUrl: 'https://www.universalorlando.com/web/en/us/theme-parks/volcano-bay', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Universal+Volcano+Bay' },
-            { id: 'busch-gardens-safari', name: 'Busch Gardens Tampa Bay & Safari', category: 'other_theme_parks', description: 'Experience thrilling rides and amazing animal encounters, including expansive safaris, at Busch Gardens Tampa Bay, a premier adventure park. From the towering Iron Gwazi roller coaster to the Serengeti Safari, where you can see giraffes and zebras roaming free, it offers a unique blend of adrenaline and wildlife.', imageUrl: 'https://s7d2.scene7.com/is/image/TWCNews/0702_bn9_busch_gardens_safari_tour_masks', websiteUrl: 'https://buschgardens.com/tampa/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Busch+Gardens+Tampa+Bay' },
-            { id: 'animal-kingdom', name: 'Walt Disney World Animal Kingdom', category: 'other_theme_parks', description: 'Journey into the heart of nature and adventure at Disney\'s Animal Kingdom, a park dedicated to natural environment and animal conservation. Embark on a Kilimanjaro Safaris expedition, explore the mystical world of Pandora – The World of Avatar, and brave the heights of Expedition Everest. It\'s a unique blend of thrilling attractions, breathtaking animal encounters, and captivating cultural experiences.', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/fetch/c_limit,h_1200,q_75,w_1200/https://visitorlando.widen.net/content/4gxkw07ozb/original/2322-view.jpg%3Fposition%3Dc%26crop%3Dyes%26color%3Dffffff%26quality%3D8', websiteUrl: 'https://www.disneyworld.disney.go.com/destinations/animal-kingdom/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Walt+Disney+World+Animal+Kingdom' },
-            { id: 'gatorland', name: 'Gatorland', category: 'other_theme_parks', description: 'Dubbed the "Alligator Capital of the World," Gatorland is a 110-acre theme park and wildlife preserve offering a unique blend of thrilling attractions and up-close animal encounters. See thousands of alligators and crocodiles, thrilling Gator Jumparoo shows, and even zip-line over a pond of hungry gators. It\'s a classic Florida attraction that provides exciting and educational entertainment for the whole family.', imageUrl: 'https://res.cloudinary.com/dtljonz0f/image/upload/f_auto/q_auto/v1/gc-v1/orlando/gatorland_orlando_11_cvfpey?_a=BAVAZGE70', websiteUrl: 'https://www.gatorland.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Gatorland+Orlando' },
-            { id: 'discovery-cove', name: 'Discovery Cove', category: 'other_theme_parks', description: 'Discovery Cove is an all-inclusive day resort where you can swim with dolphins, snorkel with tropical fish and rays, and relax on pristine beaches. It offers a unique, intimate animal encounter experience in a lush, tropical setting. Reservations are limited to ensure a personalized and uncrowded experience.', imageUrl: 'https://discoverycove.com/orlando/-/media/migrated-media/discovery-cove-orlando/images/heroes/generic/1024x530-dco-2022-park-scope.jpg?h=530&w=1024&la=en&hash=E5FE846C78F2488733D9AB2BDB6B537B', websiteUrl: 'https://www.discoverycove.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Discovery+Cove+Orlando' },
-            { id: 'everglades', name: 'Everglades National Park', category: 'nature_beaches', description: 'Discover the unique ecosystem of the Everglades National Park, a vast wetland preserve in Florida. Take an exhilarating airboat tour to spot alligators, wading birds, and other wildlife in their natural habitat. Explore walking trails through cypress forests and observe the diverse flora and fauna of this incredible natural wonder.', imageUrl: 'https://cdn.britannica.com/92/130792-050-ED0EFC61/Everglades-National-Park-Florida.jpg', websiteUrl: 'https://www.nps.gov/ever/index.htm', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Everglades+National+Park' },
-            { id: 'coco-beach', name: 'Cocoa Beach', category: 'nature_beaches', description: 'Enjoy a classic Florida beach day at Cocoa Beach, located on the Atlantic coast. Known for its beautiful sandy shores, excellent surfing conditions, and the iconic Westgate Cocoa Beach Pier, it\'s a great spot for relaxation, sunbathing, and watersports. Explore local shops and enjoy fresh seafood.', imageUrl: 'https://www.wildlifewatersports.com/wp-content/uploads/2021/06/cocoa-beach-pier.png', websiteUrl: 'https://www.visitcocoabeach.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Cocoa+Beach+Florida' },
-            { id: 'clearwater', name: 'Clearwater Beach', category: 'nature_beaches', description: 'Discover the stunning white sands and clear waters of Clearwater Beach on Florida\'s Gulf Coast. Renowned for its calm, shallow waters ideal for families, and vibrant Pier 60 sunsets celebrations, it\'s a perfect destination for swimming, sunbathing, and dolphin watching tours.', imageUrl: 'https://s42949.pcdn.co/wp-content/uploads/2023/01/Gray-Line-Orlando-Clearwater-Beach-Promenade-banner.jpeg', websiteUrl: 'https://www.visitclearwaterflorida.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Clearwater+Beach+Florida' },
-            { id: 'lakes', name: 'Orlando Lakes', category: 'nature_beaches', description: 'Orlando is home to numerous beautiful lakes offering a variety of recreational activities. From tranquil Lake Eola Park in downtown Orlando, where you can enjoy swan boat rides and scenic walks, to larger lakes offering fishing and boating, they provide a peaceful escape and outdoor fun.', imageUrl: 'https://www.orlando.gov/files/oc-templates/00000000-0000-0000-0000-000000000000/7d7464b8-f248-4433-b870-efe915aca122/v/3570/082018_lakeeola_skyline2-min-min.jpg?t=638821780570787311', websiteUrl: 'https://www.google.com/search?q=lakes+in+orlando+florida', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=lakes+in+Orlando+Florida' },
-            { id: 'kennedy-space-center', name: 'Kennedy Space Center Visitor Complex', category: 'entertainment_attractions', description: 'Blast off on an educational and inspiring journey at the Kennedy Space Center Visitor Complex. Walk among giant rockets, meet a veteran astronaut, experience the thrill of a simulated space shuttle launch, and witness the awe-inspiring Space Shuttle Atlantis exhibit. It\'s a fascinating look into the past, present, and future of space exploration, engaging visitors of all ages with interactive displays and historic artifacts.', imageUrl: 'https://cdn-imgix.headout.com/microbrands-content-image/image/d064b834bebab22aeda3a22b9f631f20-Kennedy%20Space%20Center.jpg?auto=format&w=1069.6000000000001&h=687.6&q=90&ar=14%3A9&crop=faces&fit=crop', websiteUrl: 'https://www.kennedyspacecenter.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kennedy+Space+Center+Visitor+Complex' },
-            { id: 'canyon-zip-line', name: 'Canyon Zip Line and Adventure Park', category: 'entertainment_attractions', description: 'Soar through the skies at Canyon Zip Line and Adventure Park. Offering exhilarating zip line courses over stunning canyons and challenging aerial adventure parks, it\'s an adrenaline-pumping experience for thrill-seekers. Perfect for families and groups looking for outdoor adventure.', imageUrl: 'https://www.ocalamarion.com/imager/files_idss_com/C201/d57ea4e6-b814-4970-a280-3528e18c6f8f_e45adf5f6bc0c5c2a30a39868f44eab6.jpg', websiteUrl: 'https://www.zipthecanyons.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Canyon+Zip+Line+and+Adventure+Park+Florida' },
-            { id: 'old-town', name: 'Old Town & Old Town Car Night', category: 'entertainment_attractions', description: 'Step back in time at Old Town, a recreation of a classic Florida town with unique shops, restaurants, rides, and the famous Saturday Nite Classic Car Show and Cruise. Enjoy live entertainment, carnival rides, and a nostalgic atmosphere perfect for a family evening.', imageUrl: 'https://visitorlando.widen.net/content/84rbyer2ku/jpeg/184117-street-overview.jpg?crop=false&position=c&q=80&color=ffffffff&u=kggsuk', websiteUrl: 'https://www.myoldtownusa.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Old+Town+Kissimmee+FL' },
-            { id: 'chillis', name: "Chilli's Grill & Bar", category: 'food_stays', description: "Chilli's Grill & Bar is a popular casual dining restaurant known for its American and Tex-Mex cuisine. Enjoy classic favorites like sizzling fajitas, baby back ribs, and handcrafted burgers in a vibrant and family-friendly atmosphere. Multiple locations are available across Orlando.", imageUrl: 'https://imageio.forbes.com/specials-images/imageserve/66478e8231a9ad04b16e8d76/Florida--Orlando--Chili-s-Grill---Bar--restaurant-entrance/0x0.jpg?crop=2035,1145,x0,y0,safe&height=400&width=711&fit=bounds', websiteUrl: 'https://www.chilis.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Chilis+Grill+Bar+Orlando' },
-            { id: 'longhorns', name: 'Longhorn Steakhouse', category: 'food_stays', description: 'Longhorn Steakhouse offers a classic steakhouse experience with a Western theme. Indulge in expertly grilled steaks, ribs, and fresh seafood, along with signature sides. It\'s a great choice for a hearty meal in a comfortable and welcoming setting.', imageUrl: 'https://media.cntraveler.com/photos/5c05c8193ffe425069ff752b/master/w_1200,c_limit/LongHorn-Steakhouse_2018_0037-FlovalNewYorkStrip_2018.jpg', websiteUrl: 'https://www.longhornsteakhouse.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Longhorn+Steakhouse+Orlando' },
-            { id: 'carlos-bakery-cakes', name: "Carlo's Bakery Cakes", category: 'food_stays', description: 'Famous from the TV show "Cake Boss," Carlo\'s Bakery offers an incredible array of cakes, pastries, cookies, and desserts. Known for their custom-designed cakes, it\'s a must-visit for anyone with a sweet tooth looking for delicious treats.', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,h_1200,q_75,w_1200/v1/clients/orlandofl/7891_carlos_entrance_94dcacd4-10be-4826-b311-7e2d36624e7f.jpg', websiteUrl: 'https://www.carlosbakery.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Carlos+Bakery+Orlando' },
-            { id: 'floridays', name: 'Floridays Resort Orlando', category: 'food_stays', description: 'Floridays Resort Orlando offers spacious, family-friendly suites with full kitchens and separate living areas. This resort provides a relaxed atmosphere with multiple pools, a splash pad, and easy access to Orlando\'s attractions. Ideal for longer stays and families seeking comfort and convenience.', imageUrl: 'https://content.tui.co.uk/adamtui/2023_1/31_15/67d26d2d-bf84-4f91-bd31-af9b00fbd8a8/ACC_034385_FLO_12WebOriginalCompressed.jpg?i10c=img.resize(width:1080);img.crop(width:1080%2Cheight:608)', websiteUrl: 'https://www.floridaysresortorlando.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Floridays+Resort+Orlando' },
-            { id: 'sonesta', name: 'Sonesta ES Suites Orlando', category: 'food_stays', description: 'Sonesta ES Suites Orlando provides all-suite accommodations designed for comfort and extended stays. Each suite features a fully equipped kitchen, spacious living area, and separate bedrooms. Guests can enjoy a complimentary breakfast, outdoor pool, and fitness center, making it a great option for families.', imageUrl: 'https://images.trvl-media.com/lodging/1000000/30000/26800/26711/7d99a9d2.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill', websiteUrl: 'https://www.sonesta.com/sonesta-es-suites/orlando/international-drive', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Sonesta+ES+Suites+Orlando' },
-            { id: 'westgates-lakes', name: 'Westgate Lakes Resort & Spa', category: 'food_stays', description: 'Westgate Lakes Resort & Spa is a sprawling lakefront resort offering a wide range of amenities. Guests can enjoy multiple swimming pools, a full-service spa, mini-golf, and a variety of dining options. The resort provides spacious villas, ideal for families and groups, with easy access to theme parks and attractions.', imageUrl: 'https://dlq00ggnjruqn.cloudfront.net/prometheus/getImage?id=347158&width=865&height=490', websiteUrl: 'https://www.westgateresorts.com/hotels/florida/orlando/westgate-lakes-resort-spa/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Westgate+Lakes+Resort+Spa+Orlando' },
-            {
-                id: 'marriotts-grande-vista',
-                name: "Marriott's Grande Vista",
-                category: 'food_stays',
-                description: "A family-friendly vacation ownership resort in Orlando, offering spacious one, two, or three-bedroom villas with kitchens, washer/dryers, and balconies. Features include outdoor pools, a fitness center, on-site spa, golf club, and several dining options. It's close to major attractions like Walt Disney World®, Universal Orlando Resort™, and SeaWorld®.",
-                imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/04/98/61/marriott-s-grande-vista.jpg?w=1200&h=-1&s=1',
-                websiteUrl: 'https://www.marriott.com/en-us/hotels/mcogv-marriotts-grande-vista/overview/',
-                googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Marriott%27s+Grande+Vista+Orlando+FL'
-            },
-            {
-                id: 'sheraton-vistana-villages',
-                name: "Sheraton Vistana Villages Resort Villas, I-Drive/Orlando",
-                category: 'food_stays',
-                description: "A vacation ownership resort on International Drive, minutes from Walt Disney World®, Universal Orlando Resort™, and SeaWorld®. Offers one-, two-, or three-bedroom villas with full kitchens or kitchenettes, washer/dryers, and balconies. Amenities include multiple pools, dining options like Breeze Bar & Grille, and complimentary Wi-Fi.",
-                imageUrl: 'https://www.marriott.com/content/dam/marriott-digital/marriott-vacation-club/vc/master/hero/sisf-hero-vistana-villages-pool-3840x1650.jpg',
-                websiteUrl: 'https://www.marriott.com/en-us/hotels/mcose-sheraton-vistana-villages-resort-villas-i-drive-orlando/overview/',
-                googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Sheraton+Vistana+Villages+Resort+Villas+I-Drive+Orlando'
-            },
-            { id: 'cars-for-hire', name: 'Cars for Hire in Orlando', category: 'leisure', description: 'Various car rental options are available throughout Orlando, including at the airport and multiple city locations. Hiring a car provides convenient transportation for exploring the region at your own pace, from theme parks to beaches and natural attractions.', imageUrl: 'https://i.ytimg.com/vi/WzNJ3iF1i84/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBnMWZ6Ss-K1hL3urWjVl5aQbpOHg', websiteUrl: 'https://www.avis.com/en/locations/us/fl/orlando', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=car+rental+Orlando+FL' },
-            { id: 'premium-outlets', name: 'Orlando Premium Outlets', category: 'shopping', description: 'Orlando is home to two massive Premium Outlets locations: Vineland Ave and International Drive. These outdoor shopping destinations feature hundreds of designer and brand-name outlet stores, offering significant savings on fashion, accessories, footwear, and more. A must-visit for serious shoppers.', imageUrl: 'https://assets.simon.com/propertyimages/874/orlando-premium-outlets-15.jpg', websiteUrl: 'https://www.premiumoutlets.com/outlet/orlando-vineland', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Orlando+Premium+Outlets+Vineland+Ave' },
-            { id: 'florida-mall', name: 'The Florida Mall', category: 'shopping', description: "One of Central Florida's largest indoor shopping destinations, The Florida Mall offers a diverse selection of more than 250 retail stores, including major department stores, specialty shops, and a variety of dining options. It's a comprehensive shopping experience under one roof.", imageUrl: 'https://visitorlando.widen.net/content/3nm9gzscc4/original/7891-shake-shack-exterior.jpg?position=c&crop=yes&color=ffffff&quality=8', websiteUrl: 'https://www.simon.com/mall/the-florida-mall', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=The+Florida+Mall+Orlando' },
-            { id: 'millenia-mall', name: 'Mall at Millenia', category: 'shopping', description: 'For an upscale shopping experience, visit the Mall at Millenia. This luxurious indoor mall features high-end department stores and designer boutiques, alongside a selection of fine dining restaurants. It\'s a premier destination for fashion enthusiasts and luxury shoppers.', imageUrl: 'https://visitorlando.widen.net/content/ivbztf1zd8/jpeg/7893-main-entrance2.jpg?crop=false&position=c&q=80&color=ffffffff&u=kggsuk', websiteUrl: 'https://www.mallatmillenia.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Mall+at+Millenia+Orlando' },
-            { id: 'east-end-market', name: 'East End Market', category: 'shopping', description: 'East End Market is a vibrant neighborhood market and food hall in Orlando, featuring a diverse array of local vendors. Discover artisanal bakers, coffee roasters, unique shops, and delicious eateries. It\'s a hub for community, creativity, and culinary delights.', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_fill,f_jpg,g_xy_center,h_427,q_65,w_640,x_2282,y_1948/v1/clients/orlandofl/Downtown_Orlando_com_east_end_market_sign_dsc_2350_ca3096ed-50c1-470a-9095-2a9cf3fd8127.jpg', websiteUrl: 'https://eastendmkt.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=East+End+Market+Orlando' },
-            { id: 'pirates-cove-golf', name: "Pirate's Cove Adventure Golf (I-Drive)", category: 'leisure', description: 'Voted "Best in Florida," Pirate\'s Cove Adventure Golf offers two 18-hole courses with elaborate pirate-themed landscaping and obstacles. Navigate waterfalls, sunken ships, and pirate dungeons for a swashbuckling mini-golf experience on International Drive.', imageUrl: 'https://www.piratescove.net/media/uploads/locationpage-slides/orlando/2024/*dsc02567.jpg', websiteUrl: 'https://www.piratescove.com/locations/orlando-international-drive/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pirate%27s+Cove+Adventure+Golf+International+Drive+Orlando' },
-            { id: 'hollywood-drive-in-golf', name: 'Hollywood Drive-In Golf (CityWalk)', category: 'leisure', description: 'Play through two themed 18-hole courses, "The Haunting of Ghostly Greens" and "Invaders From Planet Putt," inspired by classic horror and sci-fi movies at Universal CityWalk. Enjoy quirky obstacles and a fun, family-friendly atmosphere right in the heart of Universal Orlando Resort.', imageUrl: 'https://orlandoinformer.com/wp-content/uploads/2022/10/Hollywood-Drive-In-Golf-CityWalk.jpg', websiteUrl: 'https://www.hollywooddriveingolf.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Hollywood+Drive-In+Golf+Universal+CityWalk+Orlando' },
-            { id: 'fun-spot-go-karts', name: 'Fun Spot America Go Karts', category: 'leisure', description: 'Experience multi-level go-kart tracks at Fun Spot America, offering thrilling rides with hairpin turns, steep hills, and high speeds for all skill levels. With multiple tracks to choose from, it\'s a fantastic destination for competitive fun and adrenaline-pumping races.', imageUrl: 'https://fun-spot.com/wp-content/uploads/2015/04/quadhelix.jpg', websiteUrl: 'https://fun-spot.com/orlando/orlando-go-karts/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Fun+Spot+America+Go+Karts+Orlando' },
-            { id: 'dezerland-go-karts', name: 'Dezerland Park Go Karts', category: 'leisure', description: "Race on Florida's longest indoor go-kart track at Dezerland Park, featuring state-of-art electric karts and redesigned tracks for an adrenaline-pumping experience. With various race levels, it caters to both novice and experienced drivers looking for high-speed thrills.", imageUrl: 'https://dezerlandpark.com/wp-content/uploads/2024/04/Karting-Page.jpg', websiteUrl: 'https://dezerlandpark.com/attractions/karting-orlando/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Dezerland+Park+Go+Karts+Orlando' },
-            { id: 'shooting', name: 'Shooting Ranges in Orlando', category: 'leisure', description: 'For those interested in target shooting or firearm practice, Orlando offers a variety of public and private shooting ranges. These facilities provide a safe and controlled environment for both beginners and experienced shooters to enjoy a unique recreational activity. Always ensure to check local regulations and safety guidelines before visiting.', imageUrl: 'https://zamalektours.com/wp-content/uploads/2023/11/Shooting-Range.jpg', websiteUrl: 'https://myfwc.com/hunting/safety-education/shooting-ranges/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=shooting+ranges+Orlando+FL' },
-            { id: 'quad-biking', name: 'Quad Biking (ATV) Adventures', category: 'leisure', description: 'Experience the thrill of off-road adventure with quad biking (ATV) in Florida. Various parks and trails offer opportunities for guided tours or riding on designated paths for an exciting outdoor activity. Get ready to explore diverse landscapes and enjoy an adrenaline-pumping ride.', imageUrl: 'https://www.attractiontickets.com/sites/default/files/styles/photo_grid_other/public/2020-02/ATV-Experience-2.jpg.jpg?itok=KWJknd4w', websiteUrl: 'https://www.google.com/search?q=quad+biking+tours+orlando', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=quad+biking+Orlando+FL' }
+            { id: 'leu-gardens', name: 'Harry P. Leu Gardens', category: 'nature_beaches', description: '50-acre botanical oasis...', imageUrl: 'https://www.magicalvacationhomes.com/wp-content/uploads/2020/04/Harry_P_Leu_Gardens_3-1.jpg', websiteUrl: 'https://www.leugardens.org', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Harry+P.+Leu+Gardens+Orlando' },
+            { id: 'bok-tower', name: 'Bok Tower Gardens', category: 'nature_beaches', description: 'Peaceful garden and bird sanctuary...', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Bok_Tower_at_Work.jpg', websiteUrl: 'https://boktowergardens.org', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Bok+Tower+Gardens' },
+            { id: 'icon-park', name: 'ICON Park & The Wheel', category: 'entertainment_attractions', description: 'ICON Park features The Wheel...', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/00/ICON_Park_green_overview.jpg', websiteUrl: 'https://iconparkorlando.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=ICON+Park+Orlando' },
+            { id: 'orlando-museum-art', name: 'Orlando Museum of Art', category: 'entertainment_attractions', description: 'Explore rotating exhibits...', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/crm/visitflorida/54695_uhmdkn72x58pw6sariech1jdmswa99lv_93a5e430-5056-a36a-0b7d257fc07373d1.jpg', websiteUrl: 'https://omart.org', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Orlando+Museum+of+Art' },
+            { id: 'winter-park-boat', name: 'Winter Park Scenic Boat Tour', category: 'leisure', description: 'Relaxing one-hour boat tour...', imageUrl: 'https://www.orlandoattractions.com/2019/wp-content/uploads/2018/04/winter-park-006.jpg', websiteUrl: 'https://scenicboattours.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Winter+Park+Scenic+Boat+Tour' },
+            { id: 'disney-springs', name: 'Disney Springs', category: 'shopping', description: 'Lively waterfront district...', imageUrl: 'https://images.squarespace-cdn.com/content/v1/54493bfee4b078c86b426a79/1469285147835-IZA866EAOR557K46U91S/DIsney_Springs_Night', websiteUrl: 'https://www.disneysprings.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Disney+Springs+Orlando' },
+            { id: 'universal-studios', name: 'Universal Studios Florida', category: 'universal_parks', description: 'Step directly into the movies...', imageUrl: 'https://www.themeparkinsider.com/art/reviews/universal-studios-florida.jpg', websiteUrl: 'https://www.universalorlando.com/web/en/us/theme-parks/universal-studios-florida', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Universal+Studios+Florida' },
+            { id: 'islands-of-adventure', name: 'Universal Islands of Adventure', category: 'universal_parks', description: 'Unleash your inner adventurer...', imageUrl: 'https://www.themeparkinsider.com/art/reviews/islands-of-adventure.jpg', websiteUrl: 'https://www.universalorlando.com/web/en/us/theme-parks/islands-of-adventure', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Universal+Islands+of+Adventure' },
+            { id: 'volcano-bay', name: 'Universal Volcano Bay', category: 'universal_parks', description: 'Escape to a South Pacific paradise...', imageUrl: 'https://www.orlandomagazine.com/content/uploads/2025/02/z/q/universal-volcano-bay-nights-tickets-are-on-sale-now.jpg', websiteUrl: 'https://www.universalorlando.com/web/en/us/theme-parks/volcano-bay', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Universal+Volcano+Bay' },
+            { id: 'busch-gardens-safari', name: 'Busch Gardens Tampa Bay & Safari', category: 'other_theme_parks', description: 'Experience thrilling rides and amazing animal encounters...', imageUrl: 'https://s7d2.scene7.com/is/image/TWCNews/0702_bn9_busch_gardens_safari_tour_masks', websiteUrl: 'https://buschgardens.com/tampa/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Busch+Gardens+Tampa+Bay' },
+            { id: 'animal-kingdom', name: 'Walt Disney World Animal Kingdom', category: 'other_theme_parks', description: 'Journey into the heart of nature and adventure...', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/fetch/c_limit,h_1200,q_75,w_1200/https://visitorlando.widen.net/content/4gxkw07ozb/original/2322-view.jpg%3Fposition%3Dc%26crop%3Dyes%26color%3Dffffff%26quality%3D8', websiteUrl: 'https://www.disneyworld.disney.go.com/destinations/animal-kingdom/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Disney+Animal+Kingdom' },
+            { id: 'gatorland', name: 'Gatorland', category: 'other_theme_parks', description: 'Dubbed the "Alligator Capital of the World"...', imageUrl: 'https://res.cloudinary.com/dtljonz0f/image/upload/f_auto/q_auto/v1/gc-v1/orlando/gatorland_orlando_11_cvfpey?_a=BAVAZGE70', websiteUrl: 'https://www.gatorland.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Gatorland+Orlando' },
+            { id: 'discovery-cove', name: 'Discovery Cove', category: 'other_theme_parks', description: 'Discovery Cove is an all-inclusive day resort...', imageUrl: 'https://discoverycove.com/orlando/-/media/migrated-media/discovery-cove-orlando/images/heroes/generic/1024x530-dco-2022-park-scope.jpg?h=530&w=1024&la=en&hash=E5FE846C78F2488733D9AB2BDB6B537B', websiteUrl: 'https://www.discoverycove.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Discovery+Cove+Orlando' },
+            { id: 'everglades', name: 'Everglades National Park', category: 'nature_beaches', description: 'Discover the unique ecosystem of the Everglades...', imageUrl: 'https://cdn.britannica.com/92/130792-050-ED0EFC61/Everglades-National-Park-Florida.jpg', websiteUrl: 'https://www.nps.gov/ever/index.htm', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Everglades+National+Park' },
+            { id: 'coco-beach', name: 'Cocoa Beach', category: 'nature_beaches', description: 'Enjoy a classic Florida beach day at Cocoa Beach...', imageUrl: 'https://www.wildlifewatersports.com/wp-content/uploads/2021/06/cocoa-beach-pier.png', websiteUrl: 'https://www.visitcocoabeach.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Cocoa+Beach+Florida' },
+            { id: 'clearwater', name: 'Clearwater Beach', category: 'nature_beaches', description: 'Discover the stunning white sands...', imageUrl: 'https://s42949.pcdn.co/wp-content/uploads/2023/01/Gray-Line-Orlando-Clearwater-Beach-Promenade-banner.jpeg', websiteUrl: 'https://www.visitclearwaterflorida.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Clearwater+Beach+Florida' },
+            { id: 'lakes', name: 'Orlando Lakes', category: 'nature_beaches', description: 'Orlando is home to numerous beautiful lakes...', imageUrl: 'https://www.orlando.gov/files/oc-templates/00000000-0000-0000-0000-000000000000/7d7464b8-f248-4433-b870-efe915aca122/v/3570/082018_lakeeola_skyline2-min-min.jpg?t=638821780570787311', websiteUrl: 'https://www.google.com/search?q=lakes+in+orlando+florida', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Orlando+Lakes' },
+            { id: 'kennedy-space-center', name: 'Kennedy Space Center Visitor Complex', category: 'entertainment_attractions', description: 'Blast off on an educational journey...', imageUrl: 'https://cdn-imgix.headout.com/microbrands-content-image/image/d064b834bebab22aeda3a22b9f631f20-Kennedy%20Space%20Center.jpg?auto=format&w=1069.6000000000001&h=687.6&q=90&ar=14%3A9&crop=faces&fit=crop', websiteUrl: 'https://www.kennedyspacecenter.com', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kennedy+Space+Center+Visitor+Complex' },
+            { id: 'canyon-zip-line', name: 'Canyon Zip Line and Adventure Park', category: 'entertainment_attractions', description: 'Soar through the skies...', imageUrl: 'https://www.ocalamarion.com/imager/files_idss_com/C201/d57ea4e6-b814-4970-a280-3528e18c6f8f_e45adf5f6bc0c5c2a30a39868f44eab6.jpg', websiteUrl: 'https://www.zipthecanyons.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Canyon+Zip+Line+and+Adventure+Park+Ocala' },
+            { id: 'old-town', name: 'Old Town & Old Town Car Night', category: 'entertainment_attractions', description: 'Step back in time at Old Town...', imageUrl: 'https://visitorlando.widen.net/content/84rbyer2ku/jpeg/184117-street-overview.jpg?crop=false&position=c&q=80&color=ffffffff&u=kggsuk', websiteUrl: 'https://www.myoldtownusa.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Old+Town+Kissimmee' },
+            { id: 'chillis', name: "Chilli's Grill & Bar", category: 'food_stays', description: "Chilli's Grill & Bar is a popular casual dining restaurant...", imageUrl: 'https://imageio.forbes.com/specials-images/imageserve/66478e8231a9ad04b16e8d76/Florida--Orlando--Chili-s-Grill---Bar--restaurant-entrance/0x0.jpg?crop=2035,1145,x0,y0,safe&height=400&width=711&fit=bounds', websiteUrl: 'https://www.chilis.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Chilis+Grill+Bar+Orlando' },
+            { id: 'longhorns', name: 'Longhorn Steakhouse', category: 'food_stays', description: 'Longhorn Steakhouse offers a classic steakhouse experience...', imageUrl: 'https://media.cntraveler.com/photos/5c05c8193ffe425069ff752b/master/w_1200,c_limit/LongHorn-Steakhouse_2018_0037-FlovalNewYorkStrip_2018.jpg', websiteUrl: 'https://www.longhornsteakhouse.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Longhorn+Steakhouse+Orlando' },
+            { id: 'carlos-bakery-cakes', name: "Carlo's Bakery Cakes", category: 'food_stays', description: 'Famous from the TV show "Cake Boss"...', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,h_1200,q_75,w_1200/v1/clients/orlandofl/7891_carlos_entrance_94dcacd4-10be-4826-b311-7e2d36624e7f.jpg', websiteUrl: 'https://www.carlosbakery.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Carlos+Bakery+Orlando' },
+            { id: 'floridays', name: 'Floridays Resort Orlando', category: 'food_stays', description: 'Floridays Resort Orlando offers spacious suites...', imageUrl: 'https://content.tui.co.uk/adamtui/2023_1/31_15/67d26d2d-bf84-4f91-bd31-af9b00fbd8a8/ACC_034385_FLO_12WebOriginalCompressed.jpg?i10c=img.resize(width:1080);img.crop(width:1080%2Cheight:608)', websiteUrl: 'https://www.floridaysresortorlando.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Floridays+Resort+Orlando' },
+            { id: 'sonesta', name: 'Sonesta ES Suites Orlando', category: 'food_stays', description: 'Sonesta ES Suites Orlando provides all-suite accommodations...', imageUrl: 'https://images.trvl-media.com/lodging/1000000/30000/26800/26711/7d99a9d2.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill', websiteUrl: 'https://www.sonesta.com/sonesta-es-suites/orlando/international-drive', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Sonesta+ES+Suites+Orlando+International+Drive' },
+            { id: 'westgates-lakes', name: 'Westgate Lakes Resort & Spa', category: 'food_stays', description: 'Westgate Lakes Resort & Spa is a sprawling lakefront resort...', imageUrl: 'https://dlq00ggnjruqn.cloudfront.net/prometheus/getImage?id=347158&width=865&height=490', websiteUrl: 'https://www.westgateresorts.com/hotels/florida/orlando/westgate-lakes-resort-spa/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Westgate+Lakes+Resort+Spa+Orlando' },
+            { id: 'marriotts-grande-vista', name: "Marriott's Grande Vista", category: 'food_stays', description: "A family-friendly vacation ownership resort in Orlando...", imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/04/98/61/marriott-s-grande-vista.jpg?w=1200&h=-1&s=1', websiteUrl: 'https://www.marriott.com/en-us/hotels/mcogv-marriotts-grande-vista/overview/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Marriotts+Grande+Vista+Orlando' },
+            { id: 'sheraton-vistana-villages', name: "Sheraton Vistana Villages Resort Villas, I-Drive/Orlando", category: 'food_stays', description: "A vacation ownership resort on International Drive...", imageUrl: 'https://www.marriott.com/content/dam/marriott-digital/marriott-vacation-club/vc/master/hero/sisf-hero-vistana-villages-pool-3840x1650.jpg', websiteUrl: 'https://www.marriott.com/en-us/hotels/mcose-sheraton-vistana-villages-resort-villas-i-drive-orlando/overview/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Sheraton+Vistana+Villages+Resort+Villas+Orlando' },
+            { id: 'cars-for-hire', name: 'Cars for Hire in Orlando', category: 'leisure', description: 'Various car rental options are available...', imageUrl: 'https://i.ytimg.com/vi/WzNJ3iF1i84/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBnMWZ6Ss-K1hL3urWjVl5aQbpOHg', websiteUrl: 'https://www.avis.com/en/locations/us/fl/orlando', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Car+Rental+Orlando' },
+            { id: 'premium-outlets', name: 'Orlando Premium Outlets', category: 'shopping', description: 'Orlando is home to two massive Premium Outlets...', imageUrl: 'https://assets.simon.com/propertyimages/874/orlando-premium-outlets-15.jpg', websiteUrl: 'https://www.premiumoutlets.com/outlet/orlando-vineland', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Orlando+Premium+Outlets' },
+            { id: 'florida-mall', name: 'The Florida Mall', category: 'shopping', description: "One of Central Florida's largest indoor shopping destinations...", imageUrl: 'https://visitorlando.widen.net/content/3nm9gzscc4/original/7891-shake-shack-exterior.jpg?position=c&crop=yes&color=ffffff&quality=8', websiteUrl: 'https://www.simon.com/mall/the-florida-mall', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=The+Florida+Mall+Orlando' },
+            { id: 'millenia-mall', name: 'Mall at Millenia', category: 'shopping', description: 'For an upscale shopping experience...', imageUrl: 'https://visitorlando.widen.net/content/ivbztf1zd8/jpeg/7893-main-entrance2.jpg?crop=false&position=c&q=80&color=ffffffff&u=kggsuk', websiteUrl: 'https://www.mallatmillenia.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Mall+at+Millenia+Orlando' },
+            { id: 'east-end-market', name: 'East End Market', category: 'shopping', description: 'East End Market is a vibrant neighborhood market...', imageUrl: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_fill,f_jpg,g_xy_center,h_427,q_65,w_640,x_2282,y_1948/v1/clients/orlandofl/Downtown_Orlando_com_east_end_market_sign_dsc_2350_ca3096ed-50c1-470a-9095-2a9cf3fd8127.jpg', websiteUrl: 'https://eastendmkt.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=East+End+Market+Orlando' },
+            { id: 'pirates-cove-golf', name: "Pirate's Cove Adventure Golf (I-Drive)", category: 'leisure', description: 'Voted "Best in Florida"...', imageUrl: 'https://www.piratescove.net/media/uploads/locationpage-slides/orlando/2024/*dsc02567.jpg', websiteUrl: 'https://www.piratescove.com/locations/orlando-international-drive/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pirates+Cove+Adventure+Golf+International+Drive+Orlando' },
+            { id: 'hollywood-drive-in-golf', name: 'Hollywood Drive-In Golf (CityWalk)', category: 'leisure', description: 'Play through two themed 18-hole courses...', imageUrl: 'https://orlandoinformer.com/wp-content/uploads/2022/10/Hollywood-Drive-In-Golf-CityWalk.jpg', websiteUrl: 'https://www.hollywooddriveingolf.com/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Hollywood+Drive+In+Golf+Universal+CityWalk+Orlando' },
+            { id: 'fun-spot-go-karts', name: 'Fun Spot America Go Karts', category: 'leisure', description: 'Experience multi-level go-kart tracks...', imageUrl: 'https://fun-spot.com/wp-content/uploads/2015/04/quadhelix.jpg', websiteUrl: 'https://fun-spot.com/orlando/orlando-go-karts/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Fun+Spot+America+Go+Karts+Orlando' },
+            { id: 'dezerland-go-karts', name: 'Dezerland Park Go Karts', category: 'leisure', description: "Race on Florida's longest indoor go-kart track...", imageUrl: 'https://dezerlandpark.com/wp-content/uploads/2024/04/Karting-Page.jpg', websiteUrl: 'https://dezerlandpark.com/attractions/karting-orlando/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Dezerland+Park+Go+Karts+Orlando' },
+            { id: 'shooting', name: 'Shooting Ranges in Orlando', category: 'leisure', description: 'For those interested in target shooting...', imageUrl: 'https://zamalektours.com/wp-content/uploads/2023/11/Shooting-Range.jpg', websiteUrl: 'https://myfwc.com/hunting/safety-education/shooting-ranges/', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Shooting+Ranges+Orlando' },
+            { id: 'quad-biking', name: 'Quad Biking (ATV) Adventures', category: 'leisure', description: 'Experience the thrill of off-road adventure...', imageUrl: 'https://www.attractiontickets.com/sites/default/files/styles/photo_grid_other/public/2020-02/ATV-Experience-2.jpg.jpg?itok=KWJknd4w', websiteUrl: 'https://www.google.com/search?q=quad+biking+tours+orlando', googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Quad+Biking+Orlando' }
         ];
 
         // --- DOM Elements ---
         const itineraryNameEl = document.getElementById('itineraryName');
-        const itineraryDateEl = document.getElementById('itineraryDate');
+        const itineraryStartDateEl = document.getElementById('itineraryStartDate');
+        const itineraryNumberOfDaysEl = document.getElementById('itineraryNumberOfDays');
         const itineraryBudgetEl = document.getElementById('itineraryBudget');
+
+        const selectDayForPredefinedEl = document.getElementById('selectDayForPredefined');
+        const selectDayForCustomEl = document.getElementById('selectDayForCustom');
+
         const plannerActivitiesListEl = document.getElementById('plannerActivitiesList');
         const searchPlannerActivitiesEl = document.getElementById('searchPlannerActivities');
+
         const customActivityForm = document.getElementById('customActivityForm');
         const customNameEl = document.getElementById('customName');
         const customTimeEl = document.getElementById('customTime');
         const customCostEl = document.getElementById('customCost');
         const customDescriptionEl = document.getElementById('customDescription');
-        const itineraryItemsContainerEl = document.getElementById('itineraryItemsContainer');
+
+        const itineraryDaysContainerEl = document.getElementById('itineraryDaysContainer');
         const summaryBudgetEl = document.getElementById('summaryBudget');
         const summaryCostEl = document.getElementById('summaryCost');
         const summaryRemainingEl = document.getElementById('summaryRemaining');
+
         const shareItineraryBtn = document.getElementById('shareItineraryBtn');
         const clearItineraryBtn = document.getElementById('clearItineraryBtn');
+
         const shareModal = document.getElementById('shareModal');
         const closeShareModalBtn = document.getElementById('closeShareModal');
         const shareCodeEl = document.getElementById('shareCode');
@@ -370,10 +394,15 @@
         // --- State ---
         let itinerary = {
             name: '',
-            date: '',
+            startDate: '',
+            numberOfDays: 1,
             budget: 0,
-            items: [] // { id, type ('planner'/'custom'), name, time, cost, description, plannerActivityId? }
+            items: []
         };
+        // Variables to store the last selected day for each dropdown
+        let lastSelectedPredefinedDay = 1;
+        let lastSelectedCustomDay = 1;
+
 
         // --- Functions ---
 
@@ -385,23 +414,84 @@
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
 
+        function updateDaySelectorDropdowns() {
+            const numDays = parseInt(itineraryNumberOfDaysEl.value) || 1;
+
+            // Store current selections before clearing, if they exist
+            const currentPredefinedDay = selectDayForPredefinedEl.value ? parseInt(selectDayForPredefinedEl.value) : lastSelectedPredefinedDay;
+            const currentCustomDay = selectDayForCustomEl.value ? parseInt(selectDayForCustomEl.value) : lastSelectedCustomDay;
+
+            selectDayForPredefinedEl.innerHTML = '';
+            selectDayForCustomEl.innerHTML = '';
+
+            if (numDays <= 0) {
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "1";
+                defaultOption.textContent = "Day 1";
+                selectDayForPredefinedEl.appendChild(defaultOption.cloneNode(true));
+                selectDayForCustomEl.appendChild(defaultOption);
+                lastSelectedPredefinedDay = 1; // Reset stored day
+                lastSelectedCustomDay = 1;    // Reset stored day
+                return;
+            }
+
+            for (let i = 1; i <= numDays; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Day ${i}`;
+                selectDayForPredefinedEl.appendChild(option.cloneNode(true));
+                selectDayForCustomEl.appendChild(option.cloneNode(true)); // Use cloneNode here too
+            }
+
+            // Restore last selected day if still valid, otherwise default to 1 or max
+            lastSelectedPredefinedDay = Math.min(Math.max(1, currentPredefinedDay), numDays);
+            lastSelectedCustomDay = Math.min(Math.max(1, currentCustomDay), numDays);
+
+            selectDayForPredefinedEl.value = lastSelectedPredefinedDay;
+            selectDayForCustomEl.value = lastSelectedCustomDay;
+        }
+
+
         function saveItinerary() {
             itinerary.name = itineraryNameEl.value;
-            itinerary.date = itineraryDateEl.value;
+            itinerary.startDate = itineraryStartDateEl.value;
+            itinerary.numberOfDays = parseInt(itineraryNumberOfDaysEl.value) || 1;
             itinerary.budget = parseFloat(itineraryBudgetEl.value) || 0;
+
             localStorage.setItem('orlandoItinerary', JSON.stringify(itinerary));
             renderItinerary();
             updateBudgetSummary();
+            updateDaySelectorDropdowns();
         }
 
         function loadItinerary() {
             const savedItinerary = localStorage.getItem('orlandoItinerary');
             if (savedItinerary) {
-                itinerary = JSON.parse(savedItinerary);
-                itineraryNameEl.value = itinerary.name || '';
-                itineraryDateEl.value = itinerary.date || '';
-                itineraryBudgetEl.value = itinerary.budget || '';
+                const parsedItinerary = JSON.parse(savedItinerary);
+                itinerary = {
+                    name: parsedItinerary.name || '',
+                    startDate: parsedItinerary.startDate || parsedItinerary.date || '',
+                    numberOfDays: parsedItinerary.numberOfDays || 1,
+                    budget: parsedItinerary.budget || 0,
+                    items: parsedItinerary.items || []
+                };
+
+                itineraryNameEl.value = itinerary.name;
+                itineraryStartDateEl.value = itinerary.startDate;
+                itineraryNumberOfDaysEl.value = itinerary.numberOfDays;
+                itineraryBudgetEl.value = itinerary.budget;
+
+                itinerary.items.forEach(item => {
+                    if (item.day === undefined) {
+                        item.day = 1;
+                    }
+                });
+                // After loading number of days, ensure lastSelected days are valid
+                lastSelectedPredefinedDay = Math.min(Math.max(1, lastSelectedPredefinedDay), itinerary.numberOfDays);
+                lastSelectedCustomDay = Math.min(Math.max(1, lastSelectedCustomDay), itinerary.numberOfDays);
+
             }
+            updateDaySelectorDropdowns();
             renderItinerary();
             updateBudgetSummary();
         }
@@ -419,7 +509,7 @@
 
             filteredActivities.forEach(activity => {
                 const div = document.createElement('div');
-                div.className = 'p-3 border rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer';
+                div.className = 'p-3 border rounded-md bg-gray-50 hover:bg-gray-100';
                 div.innerHTML = `
                         <div class="flex justify-between items-center">
                             <div>
@@ -437,25 +527,31 @@
             document.querySelectorAll('.add-planner-item-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const activityId = e.target.dataset.id;
-                    const activity = allActivitiesData.find(a => a.id === activityId);
-                    const costInput = e.target.closest('.p-3').querySelector('.planner-item-cost-input');
-                    const timeInput = e.target.closest('.p-3').querySelector('.planner-item-time-input');
+                    const activityData = allActivitiesData.find(a => a.id === activityId);
+                    const parentDiv = e.target.closest('.p-3');
+                    const costInput = parentDiv.querySelector('.planner-item-cost-input');
+                    const timeInput = parentDiv.querySelector('.planner-item-time-input');
+
                     const cost = parseFloat(costInput.value) || 0;
                     const time = timeInput.value || '';
+                    const selectedDay = parseInt(selectDayForPredefinedEl.value); // Use the current value
 
-                    if (activity) {
+                    if (activityData && selectedDay) {
                         itinerary.items.push({
                             id: generateUniqueId(),
                             type: 'planner',
-                            name: activity.name,
+                            name: activityData.name,
                             time: time,
                             cost: cost,
-                            description: activity.description.split('.')[0] + '.',
-                            plannerActivityId: activity.id
+                            description: activityData.description.split('.')[0] + '.',
+                            plannerActivityId: activityData.id,
+                            day: selectedDay
                         });
-                        costInput.value = ''; // Reset cost input
-                        timeInput.value = ''; // Reset time input
+                        costInput.value = '';
+                        timeInput.value = '';
                         saveItinerary();
+                    } else if (!selectedDay) {
+                        alert("Please select a day to add the activity to.");
                     }
                 });
             });
@@ -467,9 +563,14 @@
             const time = customTimeEl.value;
             const cost = parseFloat(customCostEl.value) || 0;
             const description = customDescriptionEl.value;
+            const selectedDay = parseInt(selectDayForCustomEl.value); // Use the current value
 
             if (!name) {
                 alert("Please enter a name for the custom activity.");
+                return;
+            }
+            if (!selectedDay) {
+                alert("Please select a day to add the custom item to.");
                 return;
             }
 
@@ -479,45 +580,89 @@
                 name: name,
                 time: time,
                 cost: cost,
-                description: description
+                description: description,
+                day: selectedDay
             });
+
+            // Only reset form fields, not the day selector implicitly
+            customNameEl.value = '';
+            customTimeEl.value = '';
+            customCostEl.value = '';
+            customDescriptionEl.value = '';
+            // customActivityForm.reset(); // This might reset the select, avoid if explicitly managing select value
+
             saveItinerary();
-            customActivityForm.reset();
         }
 
         function renderItinerary() {
-            itineraryItemsContainerEl.innerHTML = '';
-            if (itinerary.items.length === 0) {
-                itineraryItemsContainerEl.innerHTML = `<p class="text-gray-500 italic">Your itinerary is currently empty. Add some activities!</p>`;
+            itineraryDaysContainerEl.innerHTML = '';
+            const numDays = parseInt(itineraryNumberOfDaysEl.value) || 0;
+
+            if (numDays === 0 || itinerary.items.length === 0) {
+                let emptyTextEl = itineraryDaysContainerEl.querySelector('.default-empty-text');
+                if (!emptyTextEl) {
+                    emptyTextEl = document.createElement('p');
+                    emptyTextEl.className = 'text-gray-500 italic default-empty-text';
+                    itineraryDaysContainerEl.appendChild(emptyTextEl);
+                }
+                if (numDays === 0 && itinerary.items.length === 0) { // Show this only if no days and no items
+                    emptyTextEl.textContent = "Please set the number of days for your itinerary.";
+                } else if (itinerary.items.length === 0) { // If days are set but no items
+                    emptyTextEl.textContent = "Your itinerary is currently empty. Add some activities!";
+                } else if (numDays === 0 && itinerary.items.length > 0) { // If items exist but days set to 0 (should not happen with validation)
+                    emptyTextEl.textContent = "Please set a valid number of days to see your items.";
+                } else {
+                    // This case should ideally not be reached if logic is correct, but as a fallback:
+                    emptyTextEl.textContent = "Your itinerary is currently empty or number of days is not set.";
+                }
                 updateBudgetSummary();
                 return;
             }
 
-            // Sort items by time if available
-            itinerary.items.sort((a, b) => {
-                if (a.time && b.time) return a.time.localeCompare(b.time);
-                if (a.time) return -1; // Items with time come first
-                if (b.time) return 1;
-                return 0; // Items without time, keep original order relative to each other
-            });
 
+            for (let i = 1; i <= numDays; i++) {
+                const daySectionEl = document.createElement('div');
+                daySectionEl.className = 'day-section';
 
-            itinerary.items.forEach(item => {
-                const itemEl = document.createElement('div');
-                itemEl.className = 'p-4 border rounded-lg bg-white shadow';
-                itemEl.innerHTML = `
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="font-semibold text-lg text-[#FF7043]">${item.name}</h4>
-                                ${item.time ? `<p class="text-sm text-gray-600">Time: ${item.time}</p>` : ''}
-                                <p class="text-sm text-gray-600">Cost: ${formatCurrency(item.cost)}</p>
-                                ${item.description ? `<p class="text-xs text-gray-500 mt-1">${item.description}</p>` : ''}
-                            </div>
-                            <button data-id="${item.id}" class="remove-item-btn button-danger text-xs">Remove</button>
-                        </div>
-                    `;
-                itineraryItemsContainerEl.appendChild(itemEl);
-            });
+                const dayTitleEl = document.createElement('h3');
+                dayTitleEl.className = 'day-title';
+                dayTitleEl.textContent = `Day ${i}`;
+                daySectionEl.appendChild(dayTitleEl);
+
+                const itemsForDay = itinerary.items
+                    .filter(item => item.day === i)
+                    .sort((a, b) => {
+                        if (a.time && b.time) return a.time.localeCompare(b.time);
+                        if (a.time) return -1;
+                        if (b.time) return 1;
+                        return 0;
+                    });
+
+                if (itemsForDay.length === 0) {
+                    const noItemsEl = document.createElement('p');
+                    noItemsEl.className = 'text-gray-500 italic text-sm';
+                    noItemsEl.textContent = 'No activities planned for this day.';
+                    daySectionEl.appendChild(noItemsEl);
+                } else {
+                    itemsForDay.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'p-4 border rounded-lg bg-white shadow mb-3';
+                        itemEl.innerHTML = `
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-md text-[#FF7043]">${item.name}</h4>
+                                        ${item.time ? `<p class="text-xs text-gray-600">Time: ${item.time}</p>` : ''}
+                                        <p class="text-xs text-gray-600">Cost: ${formatCurrency(item.cost)}</p>
+                                        ${item.description ? `<p class="text-xs text-gray-500 mt-1">${item.description}</p>` : ''}
+                                    </div>
+                                    <button data-id="${item.id}" class="remove-item-btn button-danger text-xs px-2 py-1">Remove</button>
+                                </div>
+                            `;
+                        daySectionEl.appendChild(itemEl);
+                    });
+                }
+                itineraryDaysContainerEl.appendChild(daySectionEl);
+            }
 
             document.querySelectorAll('.remove-item-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
@@ -528,6 +673,7 @@
             });
             updateBudgetSummary();
         }
+
 
         function updateBudgetSummary() {
             const totalBudget = parseFloat(itineraryBudgetEl.value) || 0;
@@ -548,42 +694,73 @@
         }
 
         function clearItinerary() {
-            if (confirm("Are you sure you want to clear the entire itinerary? This cannot be undone.")) {
-                itinerary = { name: '', date: '', budget: 0, items: [] };
+            const userConfirmed = window.confirm("Are you sure you want to clear the entire itinerary? This cannot be undone.");
+            if (userConfirmed) {
+                itinerary = {
+                    name: '',
+                    startDate: '',
+                    numberOfDays: 1,
+                    budget: 0,
+                    items: []
+                };
                 itineraryNameEl.value = '';
-                itineraryDateEl.value = '';
+                itineraryStartDateEl.value = '';
+                itineraryNumberOfDaysEl.value = '1';
                 itineraryBudgetEl.value = '';
-                saveItinerary(); // This will also re-render
+                lastSelectedPredefinedDay = 1; // Reset stored day
+                lastSelectedCustomDay = 1;    // Reset stored day
+                saveItinerary();
             }
         }
 
+
         function generateShareCode() {
-            // Ensure current details are captured before sharing
             itinerary.name = itineraryNameEl.value;
-            itinerary.date = itineraryDateEl.value;
+            itinerary.startDate = itineraryStartDateEl.value;
+            itinerary.numberOfDays = parseInt(itineraryNumberOfDaysEl.value) || 1;
             itinerary.budget = parseFloat(itineraryBudgetEl.value) || 0;
             const dataStr = JSON.stringify(itinerary);
-            return btoa(dataStr); // Base64 encode
+            return btoa(dataStr);
         }
 
         function loadFromShareCode(code) {
             try {
-                const decodedStr = atob(code); // Base64 decode
+                const decodedStr = atob(code);
                 const loadedData = JSON.parse(decodedStr);
-                if (loadedData && loadedData.items !== undefined) { // Basic validation
-                    itinerary = loadedData;
-                    itineraryNameEl.value = itinerary.name || '';
-                    itineraryDateEl.value = itinerary.date || '';
-                    itineraryBudgetEl.value = itinerary.budget || '';
-                    saveItinerary(); // This saves to local storage and re-renders
-                    alert("Itinerary loaded successfully!");
+
+                if (loadedData && loadedData.items !== undefined && loadedData.numberOfDays !== undefined) {
+                    itinerary = {
+                        name: loadedData.name || '',
+                        startDate: loadedData.startDate || '',
+                        numberOfDays: loadedData.numberOfDays || 1,
+                        budget: loadedData.budget || 0,
+                        items: loadedData.items || []
+                    };
+
+                    itinerary.items.forEach(item => {
+                        if (item.day === undefined || item.day < 1 || item.day > itinerary.numberOfDays) {
+                            item.day = 1;
+                        }
+                    });
+
+                    itineraryNameEl.value = itinerary.name;
+                    itineraryStartDateEl.value = itinerary.startDate;
+                    itineraryNumberOfDaysEl.value = itinerary.numberOfDays;
+                    itineraryBudgetEl.value = itinerary.budget;
+
+                    lastSelectedPredefinedDay = 1; // Reset on load
+                    lastSelectedCustomDay = 1;   // Reset on load
+
+                    saveItinerary();
+                    showModalMessage("Itinerary loaded successfully!");
+
                     return true;
                 } else {
-                    alert("Invalid itinerary code structure.");
+                    showModalMessage("Invalid itinerary code structure. Could not load.");
                 }
             } catch (error) {
                 console.error("Failed to load itinerary from code:", error);
-                alert("Invalid or corrupted itinerary code.");
+                showModalMessage("Invalid or corrupted itinerary code. Could not load.");
             }
             return false;
         }
@@ -593,16 +770,48 @@
             const shareData = urlParams.get('data');
             if (shareData) {
                 if (loadFromShareCode(shareData)) {
-                    // Remove the data from URL to prevent re-loading on refresh
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
             }
         }
 
+        function showModalMessage(message, isConfirmation = false, onConfirm = null) {
+            if (isConfirmation) {
+                if (window.confirm(message)) {
+                    if (onConfirm) onConfirm();
+                }
+            } else {
+                alert(message);
+            }
+        }
+
+
         // --- Event Listeners ---
         itineraryNameEl.addEventListener('change', saveItinerary);
-        itineraryDateEl.addEventListener('change', saveItinerary);
-        itineraryBudgetEl.addEventListener('input', saveItinerary); // Use input for real-time budget update
+        itineraryStartDateEl.addEventListener('change', saveItinerary);
+        itineraryNumberOfDaysEl.addEventListener('change', () => {
+            const numDays = parseInt(itineraryNumberOfDaysEl.value) || 1;
+            if (numDays < 1) itineraryNumberOfDaysEl.value = 1;
+            if (numDays > 30) itineraryNumberOfDaysEl.value = 30;
+            itinerary.numberOfDays = parseInt(itineraryNumberOfDaysEl.value);
+
+            // Validate and adjust lastSelectedDay variables
+            lastSelectedPredefinedDay = Math.min(lastSelectedPredefinedDay, itinerary.numberOfDays);
+            lastSelectedCustomDay = Math.min(lastSelectedCustomDay, itinerary.numberOfDays);
+
+            updateDaySelectorDropdowns(); // This will now use the potentially adjusted lastSelectedDay
+            saveItinerary();
+        });
+        itineraryBudgetEl.addEventListener('input', saveItinerary);
+
+        selectDayForPredefinedEl.addEventListener('change', (e) => {
+            lastSelectedPredefinedDay = parseInt(e.target.value);
+        });
+        selectDayForCustomEl.addEventListener('change', (e) => {
+            lastSelectedCustomDay = parseInt(e.target.value);
+        });
+
+
         searchPlannerActivitiesEl.addEventListener('input', (e) => renderPlannerActivities(e.target.value));
         customActivityForm.addEventListener('submit', handleCustomActivitySubmit);
         clearItineraryBtn.addEventListener('click', clearItinerary);
@@ -623,13 +832,23 @@
 
         copyShareCodeBtn.addEventListener('click', () => {
             shareCodeEl.select();
-            document.execCommand('copy');
-            alert('Share code copied to clipboard!');
+            try {
+                document.execCommand('copy');
+                showModalMessage('Share code copied to clipboard!');
+            } catch (err) {
+                showModalMessage('Failed to copy code. Please copy manually.');
+                console.error('Fallback: Oops, unable to copy', err);
+            }
         });
         copyShareLinkBtn.addEventListener('click', () => {
             shareLinkEl.select();
-            document.execCommand('copy');
-            alert('Share link copied to clipboard!');
+            try {
+                document.execCommand('copy');
+                showModalMessage('Share link copied to clipboard!');
+            } catch (err) {
+                showModalMessage('Failed to copy link. Please copy manually.');
+                console.error('Fallback: Oops, unable to copy', err);
+            }
         });
 
 
@@ -646,17 +865,19 @@
                     loadCodeModal.classList.remove('active');
                 }
             } else {
-                alert("Please paste a code to load.");
+                showModalMessage("Please paste a code to load.");
             }
         });
 
 
         // --- Initial Load ---
-        renderPlannerActivities();
-        loadFromUrl(); // Check for URL parameters first
-        if (!new URLSearchParams(window.location.search).has('data')) { // Only load from localStorage if not loading from URL
+        loadFromUrl();
+        if (!new URLSearchParams(window.location.search).has('data')) {
             loadItinerary();
         }
+        updateDaySelectorDropdowns(); // This will now use the potentially loaded lastSelectedDay values
+        renderPlannerActivities();
+        renderItinerary();
 
     </script>
 </body>
